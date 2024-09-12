@@ -41,6 +41,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'result_system.urls'
 
+# Redirect URLs after login/logout
+LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/login/'
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

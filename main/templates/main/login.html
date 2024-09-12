@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #f4f6f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      
+      .login-container .hero-text {
+        text-align: center;
+      }
+      .hero-text {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        letter-spacing: 1px;
+      }
+      .login-form {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      .login-form h2 {
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-align: center;
+      }
+      .login-form input {
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        padding: 10px;
+      }
+      .form-label {
+        font-weight: 500;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="hero-text">Janaki Boarding School</div>
+
+      <div class="login-form">
+        <form method="post" class="d-flex flex-column align-items-center">
+          {% csrf_token %}
+          <div class="mb-3 d-flex flex-column w-100">
+            <label class="form-label" for="id_username">{{ form.username.label }}</label>
+            {{ form.username }}
+          </div>
+          <div class="mb-3 d-flex flex-column w-100">
+            <label class="form-label" for="id_password">{{ form.password.label }}</label>
+            {{ form.password }}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
