@@ -1,0 +1,133 @@
+<!-- myapp/templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #f4f6f9;
+        padding-top: 20px;
+      }
+      .navbar {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .wrapper {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1.5rem;
+        max-width: 1000px;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .card-button {
+        width: 200px;
+        height: 150px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .card-button:hover {
+        background-color: #007bff;
+        color: #ffffff;
+        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+        transform: translateY(-5px);
+        border-color: #007bff;
+      }
+      
+      .card-button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container wrapper">
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'home' %}" class="btn btn-primary">&lt; Back</a>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_student">+ Add Student</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="add_student" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="add_studentLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="add_studentLabel">Fill Student Info | {{ class.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <label for="student_roll_no" class="col-form-label">Roll No:</label>
+                    <div class="flex-grow-1">
+                      <input autofocus type="number" class="form-control" id="student_roll_no" name="student_roll_no" />
+                    </div>
+                  </div>
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <label for="student_name" class="col-form-label">Name:</label>
+                    <div class="flex-grow-1">
+                      <input type="text" autocapitalize class="form-control" id="student_name" name="student_name" />
+                    </div>
+                  </div>
+
+                  <button class="btn btn-success w-100">Add Student</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table mt-5">
+        <thead>
+          <tr>
+            <th scope="col">Roll No</th>
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        {% if students %}
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <th scope="row">{{ student.roll_no }}</th>
+                <td>{{ student.name }}</td>
+                <td>Otto</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        {% else %}
+          No students
+        {% endif %}
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
