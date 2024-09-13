@@ -21,7 +21,7 @@
 
 {% block main_content %}
   <div class="form-wrapper d-flex flex-column gap-2">
-    <a href="{% url 'home' %}" class="btn btn-primary">&lt; Back</a>
+    <a href="{% url 'add_students' %}" class="btn btn-primary">&lt; Back</a>
     <form action="" method="post" class="student_update_form">
       {% csrf_token %}
       <h5>Update Student Record</h5>

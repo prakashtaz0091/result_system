@@ -54,18 +54,18 @@ def add_students(request):
             'students': []
         }
 
-    return render(request, 'main/add_students.html', context)
+    return render(request, 'main/student/add_students.html', context)
 
 
 
 class StudentUpdateView(UpdateView):
     model = Student
     form_class = forms.StudentForm
-    template_name = 'main/student_update.html'
+    template_name = 'main/student/student_update.html'
     success_url = reverse_lazy('add_students')  # Redirect URL after successful update.
 
 
 class StudentDeleteView(DeleteView):
     model = Student
-    template_name = 'main/student_confirm_delete.html'
+    template_name = 'main/student/student_confirm_delete.html'
     success_url = reverse_lazy('add_students')  # Redirect URL after successful deletion.
