@@ -17,7 +17,7 @@ class Grade(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length=50)
-    roll_no = models.IntegerField()
+    roll_no = models.IntegerField(unique=True)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name="students")
 
     def __str__(self):

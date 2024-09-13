@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Update Student
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .form-wrapper {
+      max-width: 600px;
+      margin: auto;
+      margin-top: 10%;
+    }
+    .student_update_form {
+      border: 1px solid gray;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="form-wrapper d-flex flex-column gap-2">
+    <a href="{% url 'home' %}" class="btn btn-primary">&lt; Back</a>
+    <form action="" method="post" class="student_update_form">
+      {% csrf_token %}
+      <h5>Update Student Record</h5>
+      <hr />
+      <div class="mb-3 d-flex align-items-center gap-2">
+        {% comment %} <label for="student_roll_no" class="col-form-label">Roll No:</label> {% endcomment %}
+        {{ form.roll_no.label_tag }}
+        <div class="flex-grow-1">
+          {{ form.roll_no }}
+
+          {% comment %} <input autofocus type="number" class="form-control" id="student_roll_no" name="student_roll_no" /> {% endcomment %}
+        </div>
+      </div>
+      <div class="text-danger">{{ form.roll_no.errors }}</div>
+      <div class="mb-3 d-flex align-items-center gap-2">
+        {{ form.name.label_tag }}
+
+        <div class="flex-grow-1">{{ form.name }}</div>
+      </div>
+      <button class="btn btn-success w-100">Update Student Record</button>
+    </form>
+  </div>
+{% endblock %}
