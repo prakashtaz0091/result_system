@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 
 {% block title %}
-  Confirm Delete Student
+  Confirm Delete Subject
 {% endblock %}
 
 {% block extra_css %}
@@ -17,8 +17,8 @@
 {% block main_content %}
   <form method="post" class="delete-form d-flex flex-column gap-2">
     {% csrf_token %}
-    <h5>Are you sure, you want to delete <i>{{ student.name }}'s</i> record</h5>
+    <h5>Are you sure, you want to delete <i>{{ subject.grade.name }} {{ subject.name }}'s</i> record</h5>
     <button class="btn btn-danger" type="submit">Yes, I am sure</button>
-    <a class="btn btn-primary" href="{% url 'add_students' %}">Cancel</a>
+    <a class="btn btn-primary" href="{% url 'subjects_view' %}">Cancel</a>
   </form>
 {% endblock %}

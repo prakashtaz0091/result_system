@@ -1,0 +1,70 @@
+{% extends 'main/admin/admin_base.html' %}
+
+{% block title %}
+  Teachers
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'admin_view' %}" class="btn btn-primary">&lt; Back</a>
+      <a href="{% url 'teachers_create_view' %}" class="btn btn-primary">+ Add Teacher</a>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table table-striped table-dark table-hover table-bordered caption-top mt-5">
+        <caption>Class {{ class.name }} Teachers list</caption>
+        <thead>
+          <tr>
+            <th scope="col">username</th>
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        {% if teachers %}
+          <tbody>
+            {% for teacher in teachers %}
+              <tr>
+                <td>{{ teacher.username }}</td>
+                <th scope="row">{{ teacher.first_name|default:'' }} {{ teacher.last_name|default:'' }}</th>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{% url 'teacher_update_view' teacher.id %}" class="btn btn-success btn-sm">Edit</a>
+                    <a href="{% url 'teacher_delete_view' teacher.id %}" class="btn btn-danger btn-sm">Delete</a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        {% else %}
+          No Teachers
+        {% endif %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

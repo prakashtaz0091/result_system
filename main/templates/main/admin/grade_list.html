@@ -1,0 +1,70 @@
+{% extends 'main/admin/admin_base.html' %}
+
+{% block title %}
+  Grades
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'admin_view' %}" class="btn btn-primary">&lt; Back</a>
+      <a href="{% url 'grades_create_view' %}" class="btn btn-primary">+ Create Grade</a>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table table-striped table-dark table-hover table-bordered caption-top mt-5">
+        <caption>Grades list</caption>
+        <thead>
+          <tr>
+            <th scope="col">Grade Name</th>
+            <th scope="col">Class Teacher</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        {% if grades %}
+          <tbody>
+            {% for grade in grades %}
+              <tr>
+                <th scope="row">{{ grade.name }}</th>
+                <td>{{ grade.teacher.first_name|default:grade.teacher }} {{ grade.teacher.last_name|default:'' }}</td>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{% url 'grades_update_view' grade.id %}" class="btn btn-success btn-sm">Edit</a>
+                    <a href="{% url 'grades_delete_view' grade.id %}" class="btn btn-danger btn-sm">Delete</a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        {% else %}
+          No Grades
+        {% endif %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'main/admin/admin_base.html' %}
+
+{% block title %}
+  Update Grade
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    
+    .form {
+      margin-top: 1.2rem;
+      border: 1px solid gray;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'grades_view' %}" class="btn btn-primary">&lt; Back</a>
+    </div>
+
+    <form class="form" method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        <div class="text-danger">{{ form.name.errors }}</div>
+      </div>
+      <div class="mb-3">
+        {{ form.teacher.label_tag }}
+        {{ form.teacher }}
+        <div class="text-danger">{{ form.teacher.errors }}</div>
+        {% if form.teacher.errors %}
+          <a href="{% url 'teachers_create_view' %}">Add New Teacher</a>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-success">Update</button>
+    </form>
+  </div>
+{% endblock %}

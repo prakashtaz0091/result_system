@@ -1,0 +1,53 @@
+{% extends 'main/admin/admin_base.html' %}
+
+{% block title %}
+  Update Subject
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    
+    .form {
+      margin-top: 1.2rem;
+      border: 1px solid gray;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'subjects_view' %}" class="btn btn-primary">&lt; Back</a>
+    </div>
+
+    <form class="form" method="post">
+      {% csrf_token %}
+      <div class="text-danger">{{ form.non_field_errors }}</div>
+      <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        <div class="text-danger">{{ form.name.errors }}</div>
+      </div>
+      <div class="mb-3">
+        {{ form.grade.label_tag }}
+        {{ form.grade }}
+        <div class="text-danger">{{ form.grade.errors }}</div>
+      </div>
+      <div class="mb-3">
+        {{ form.subject_teacher.label_tag }}
+        {{ form.subject_teacher }}
+        <div class="text-danger">{{ form.subject_teacher.errors }}</div>
+      </div>
+
+      <button type="submit" class="btn btn-success">Update Subject</button>
+    </form>
+  </div>
+{% endblock %}
