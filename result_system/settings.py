@@ -38,13 +38,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'main.middlewares.SuperuserRedirectMiddleware',
+    'main.middlewares.ProtectAdminPagesMiddleware',
 ]
 
 ROOT_URLCONF = 'result_system.urls'
 
 # Redirect URLs after login/logout
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/teacher_pages/'
 # LOGOUT_REDIRECT_URL = '/login/'
+
 
 
 TEMPLATES = [

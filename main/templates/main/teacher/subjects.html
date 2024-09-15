@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Subjects
+{% endblock %}
+
+{% block main_content %}
+  <div class="container mt-5">
+    <div class="d-flex justify-content-center gap-5 flex-wrap">
+      {% for subject in subjects %}
+        <a href="" class="card-button">{{ subject|title }}</a>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

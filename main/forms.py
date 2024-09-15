@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Student, Grade, Subject, Exam
+from .models import Student, Grade, Subject, Exam, ExamPaper
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
@@ -16,6 +16,12 @@ class StudentForm(ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+    def save(self, commit=True):
+        student = super(StudentForm, self).save(commit=False)
+        student.name = student.name.title()
+        if commit:
+            student.save()
+        return student
 
 class GradeForm(forms.ModelForm):
     class Meta:
@@ -152,3 +158,22 @@ class ExamForm(forms.ModelForm):
         
         # Set the choices for the year field
         self.fields['year'].choices = years
+
+
+
+class ExamPaperForm(forms.ModelForm):
+
+    class Meta:
+        model = ExamPaper
+        fields = ['exam', 'subject', 'theory_full_marks', 'theory_pass_marks', 'practical_full_marks', 'practical_pass_marks']
+        widgets = {
+            'exam': forms.Select(attrs={'class': 'form-control'}),
+            'subject': forms.Select(attrs={'class': 'form-control'}),
+            'theory_full_marks': forms.NumberInput(attrs={'class': 'form-control'}),
+            'theory_pass_marks': forms.NumberInput(attrs={'class': 'form-control'}),
+            'practical_full_marks': forms.NumberInput(attrs={'class': 'form-control'}),
+            'practical_pass_marks': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+

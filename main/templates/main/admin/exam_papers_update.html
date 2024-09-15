@@ -1,0 +1,81 @@
+{% extends 'main/admin/admin_base.html' %}
+
+{% block title %}
+  Update Exam Paper
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    
+    .form {
+      margin-top: 1.2rem;
+      border: 1px solid gray;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'papers_view' %}" class="btn btn-primary">&lt; Back</a>
+    </div>
+
+    <form class="form" method="post">
+      {% csrf_token %}
+      <div class="text-danger">{{ form.non_field_errors }}</div>
+
+      <div class="mb-3">
+        {{ form.exam.label_tag }}
+        {{ form.exam }}
+        <div class="text-danger">{{ form.exam.errors }}</div>
+      </div>
+      <div class="mb-3">
+        {{ form.subject.label_tag }}
+        {{ form.subject }}
+        <div class="text-danger">{{ form.subject.errors }}</div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            {{ form.theory_full_marks.label_tag }}
+            {{ form.theory_full_marks }}
+            <div class="text-danger">{{ form.theory_full_marks.errors }}</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            {{ form.theory_pass_marks.label_tag }}
+            {{ form.theory_pass_marks }}
+            <div class="text-danger">{{ form.theory_pass_marks.errors }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            {{ form.practical_full_marks.label_tag }}
+            {{ form.practical_full_marks }}
+            <div class="text-danger">{{ form.practical_full_marks.errors }}</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            {{ form.practical_pass_marks.label_tag }}
+            {{ form.practical_pass_marks }}
+            <div class="text-danger">{{ form.practical_pass_marks.errors }}</div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success">Create Exam Paper</button>
+    </form>
+  </div>
+{% endblock %}

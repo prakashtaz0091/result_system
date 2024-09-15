@@ -1,11 +1,13 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Student, Grade, Subject, Exam
+from .models import Student, Grade, Subject, Exam, ExamPaper
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from .import forms
 from django.contrib.auth.models import User
+from .decorators import has_to_be_admin
 
 
 
@@ -14,6 +16,7 @@ from django.contrib.auth.models import User
 
 
 @login_required
+@has_to_be_admin
 def admin_view(request):
     return render(request, 'main/admin/home.html')
 
@@ -25,11 +28,11 @@ def home(request):
 
 
 """
-Student Views
+Teacher Views
 """
 
 @login_required
-def add_students(request):
+def students(request):
     """
     view to add students
     """
@@ -41,7 +44,7 @@ def add_students(request):
 
         Student.objects.create(roll_no=roll_no, name=name, grade=request.user.class_teacher)
         
-        return redirect('add_students')
+        return redirect('students')
         
 
 
@@ -59,22 +62,22 @@ def add_students(request):
             'students': []
         }
 
-    return render(request, 'main/student/add_students.html', context)
+    return render(request, 'main/teacher/students.html', context)
 
 
 
 class StudentUpdateView(UpdateView):
     model = Student
     form_class = forms.StudentForm
-    template_name = 'main/student/student_update.html'
-    success_url = reverse_lazy('add_students')  # Redirect URL after successful update.
+    template_name = 'main/teacher/student_update.html'
+    success_url = reverse_lazy('students')  # Redirect URL after successful update.
     
 
 
 class StudentDeleteView(DeleteView):
     model = Student
-    template_name = 'main/student/student_confirm_delete.html'
-    success_url = reverse_lazy('add_students')  # Redirect URL after successful deletion.
+    template_name = 'main/teacher/student_confirm_delete.html'
+    success_url = reverse_lazy('students')  # Redirect URL after successful deletion.
 
 
 
@@ -217,4 +220,46 @@ class ExamDeleteView(DeleteView):
 
 
 
+"""
+Exam Papers
+"""
+class ExamPaperListView(ListView):
+    model = ExamPaper
+    template_name = 'main/admin/exam_papers_list.html'
+    context_object_name = 'exam_papers'
 
+
+class ExamPaperCreateView(CreateView):
+    model = ExamPaper
+    form_class = forms.ExamPaperForm
+    template_name = 'main/admin/exam_papers_create.html'
+    success_url = reverse_lazy('papers_view')
+
+
+
+class ExamPaperUpdateView(UpdateView):
+    model = ExamPaper
+    form_class = forms.ExamPaperForm
+    template_name = 'main/admin/exam_papers_update.html'
+    success_url = reverse_lazy('papers_view')
+
+
+
+class ExamPaperDeleteView(DeleteView):
+    model = ExamPaper
+    template_name = 'main/admin/exam_papers_confirm_delete.html'
+    success_url = reverse_lazy('papers_view')
+    context_object_name = 'paper'
+
+
+
+"""
+Subjects
+"""
+
+@login_required
+@has_to_be_admin
+def subjects_view(request):
+    subjects = request.user.teaches.all()
+    print(subjects, "**********")
+    return render(request, 'main/teacher/subjects.html', {'subjects': subjects})

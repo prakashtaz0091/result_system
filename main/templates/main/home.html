@@ -62,8 +62,11 @@
   </div>
   <div class="container mt-5">
     <div class="d-flex justify-content-center gap-5">
-      <a href="{% url 'add_students' %}" class="card-button">Add Students</a>
-      <a class="card-button">Marks Entry</a>
+      <a href="{% url 'students' %}" class="card-button">
+        {{ request.user.class_teacher }}<br />
+        Students
+      </a>
+      <a href="{% url 'subjects_view' %}" class="card-button">Marks Entry</a>
     </div>
   </div>
 {% endblock %}

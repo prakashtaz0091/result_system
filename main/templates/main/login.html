@@ -62,6 +62,7 @@
       <div class="login-form">
         <form method="post" class="d-flex flex-column align-items-center">
           {% csrf_token %}
+          <div class="text-danger">{{ form.non_field_errors }}</div>
           <div class="mb-3 d-flex flex-column w-100">
             <label class="form-label" for="id_username">{{ form.username.label }}</label>
             {{ form.username }}

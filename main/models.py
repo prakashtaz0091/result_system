@@ -51,3 +51,26 @@ class Exam(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.year}"
+    
+
+
+
+class ExamPaper(models.Model):
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="papers")
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="papers")
+    theory_full_marks = models.IntegerField()
+    theory_pass_marks = models.IntegerField()
+    practical_full_marks = models.IntegerField()
+    practical_pass_marks = models.IntegerField()
+
+    class Meta:
+        unique_together = ('exam', 'subject')
+
+    def __str__(self):
+        return f"{self.subject.grade.name} - {self.subject.name} - {self.exam.name}"
+    
+
+    @property
+    def total_marks(self):
+        return self.theory_full_marks + self.practical_full_marks
+    

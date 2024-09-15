@@ -45,11 +45,12 @@
 
 {% block main_content %}
   <div class="container mt-5">
-    <div class="d-flex justify-content-center gap-5">
+    <div class="d-flex justify-content-center gap-5 flex-wrap">
       <a href="{% url 'teachers_view' %}" class="card-button">Teachers</a>
       <a href="{% url 'grades_view' %}" class="card-button">Grades</a>
       <a href="{% url 'subjects_view' %}" class="card-button">Subjects</a>
       <a href="{% url 'exams_view' %}" class="card-button">Exams</a>
+      <a href="{% url 'papers_view' %}" class="card-button">Exam Papers</a>
     </div>
   </div>
 {% endblock %}
