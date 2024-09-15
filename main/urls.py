@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.decorators import login_required
-from .decorators import has_to_be_admin
 from django.urls import include
 
 urlpatterns = [
@@ -23,6 +22,10 @@ urlpatterns = [
 
                 #subjects
                 path('teacher/subjects/', views.subjects_view, name='teachers_subjects_view'),
+
+                #marks_entry
+                path('marks_entry/<int:pk>/', views.marks_entry, name='marks_entry_view'),
+                path('marks_entry/update/<int:pk>/', views.marks_entry_update, name='marks_entry_update_view'),
             ]
         )    
          

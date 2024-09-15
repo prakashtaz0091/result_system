@@ -19,6 +19,6 @@
     {% csrf_token %}
     <h5>Are you sure, you want to delete <i>{{ student.name }}'s</i> record</h5>
     <button class="btn btn-danger" type="submit">Yes, I am sure</button>
-    <a class="btn btn-primary" href="{% url 'add_students' %}">Cancel</a>
+    <a class="btn btn-primary" href="{% url 'students' %}">Cancel</a>
   </form>
 {% endblock %}

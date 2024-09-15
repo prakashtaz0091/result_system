@@ -37,8 +37,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'main.middlewares.SuperuserRedirectMiddleware',
+    # 'main.middlewares.SuperuserRedirectMiddleware',
     'main.middlewares.ProtectAdminPagesMiddleware',
+    'main.middlewares.ProtectTeacherPagesMiddleware',
 ]
 
 ROOT_URLCONF = 'result_system.urls'

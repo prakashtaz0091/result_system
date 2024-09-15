@@ -17,8 +17,12 @@ class Grade(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length=50)
-    roll_no = models.IntegerField(unique=True)
+    roll_no = models.IntegerField()
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name="students")
+
+
+    class Meta:
+        unique_together = ('name', 'roll_no', 'grade')
 
     def __str__(self):
         return self.name
@@ -73,4 +77,18 @@ class ExamPaper(models.Model):
     @property
     def total_marks(self):
         return self.theory_full_marks + self.practical_full_marks
-    
+
+
+
+class MarksEntry(models.Model):
+    exam_paper = models.ForeignKey(ExamPaper, on_delete=models.CASCADE, related_name="marks_entries")
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="marks_entries")
+    theory_marks = models.IntegerField(null=True, blank=False)
+    practical_marks = models.IntegerField(null=True, blank=False)
+
+    class Meta:
+        unique_together = ('exam_paper', 'student')
+        verbose_name_plural = "Marks Entries"
+
+    def __str__(self):
+        return f"{self.student.name} - {self.exam_paper}"

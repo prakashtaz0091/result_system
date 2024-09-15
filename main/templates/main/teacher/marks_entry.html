@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Marks Entry
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'teachers_subjects_view' %}" class="btn btn-primary">&lt; Back</a>
+    </div>
+
+    <div class="table-wrapper">
+      <form action="" method="post">
+        <table class="table table-sm table-striped table-dark table-hover table-bordered caption-top mt-5 text-center">
+          <caption></caption>
+
+          <caption>
+            <strong>Please submit the marks carefully, as single mistake can affect whole report card</strong> <br /> {{ exam_paper }} || Theory F.M. : {{ exam_paper.theory_full_marks }} |Theory P.M. : {{ exam_paper.theory_pass_marks }} | Practical F.M. : {{ exam_paper.practical_full_marks }} | Practical P.M. : {{ exam_paper.practical_pass_marks }}
+          </caption>
+          <thead>
+            <tr>
+              <th class="align-middle" rowspan="2">Roll No</th>
+              <th class="align-middle" rowspan="2">Name</th>
+
+              <th class="align-middle" colspan="2">Obtained Marks</th>
+            </tr>
+            <tr>
+              <th>Theory</th>
+              <th>Practical</th>
+            </tr>
+          </thead>
+          {% if students %}
+            <tbody>
+              {% csrf_token %}
+              {% for student in students %}
+                <tr>
+                  <td>{{ student.roll_no }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>
+                    <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_th_marks" class="form-control" max="{{ exam_paper.theory_full_marks }}" min="0" required />
+                  </td>
+                  <td>
+                    <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_pr_marks" class="form-control" max="{{ exam_paper.practical_full_marks }}" min="0" required />
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          {% else %}
+            You haven't done marks entry for this subject
+          {% endif %}
+        </table>
+        <button class="btn btn-success w-100">Submit Marks</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
