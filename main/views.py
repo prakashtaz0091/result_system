@@ -332,4 +332,62 @@ def marks_entry(request, pk):
 @login_required
 def marks_entry_update(request, pk):
     
-    return render(request, 'main/teacher/marks_entry_update.html', {})
+    exam_paper = get_object_or_404(ExamPaper, pk=pk)
+    
+    try:
+        marks_entries = exam_paper.marks_entries.all()
+    except Exception as e:
+        print(e)
+        marks_entries = None
+
+    #handle update of marks entries
+    if request.method == 'POST':
+        form_data = request.POST
+        # print(form_data)
+        form_data_list = (list(form_data.items())[1:])
+        for index in range(0,len(form_data_list), 2):
+            """
+            form_data_list[index] -> theory marks of a student
+            form_data_list[index+1] -> practical marks of a student
+            """
+
+            try:
+                exam_paper_id, student_id, theory_marks, practical_marks = get_paper_student_marks(form_data_list[index], form_data_list[index+1])
+            except ValueError:
+                message = "There is some error while submitting the marks"
+                messages.warning(request, message)
+                return redirect('teachers_subjects_view')
+            
+            marks_entry = get_object_or_404(MarksEntry, 
+                                            exam_paper=exam_paper_id, 
+                                            student=student_id
+                                            )
+           
+            if marks_entry.theory_marks != theory_marks:
+                marks_entry.theory_marks = theory_marks
+
+            if marks_entry.practical_marks != practical_marks:
+                marks_entry.practical_marks = practical_marks
+            
+            marks_entry.save()
+            
+
+        message = "Marks updated successfully. Thank you"
+        messages.success(request, message)
+        return redirect('marks_entry_update_view', pk=pk)
+
+
+
+    
+
+
+    #show marks entries and update form
+    
+    
+
+    context = {
+        'exam_paper': exam_paper,
+        'marks_entries': marks_entries
+    }
+
+    return render(request, 'main/teacher/marks_entry_update.html',context)

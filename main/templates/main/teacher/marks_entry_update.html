@@ -33,14 +33,23 @@
     <div class="d-flex justify-content-between">
       <a href="{% url 'teachers_subjects_view' %}" class="btn btn-primary">&lt; Back</a>
     </div>
-
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
     <div class="table-wrapper">
       <form action="" method="post">
         <table class="table table-sm table-striped table-dark table-hover table-bordered caption-top mt-5 text-center">
           <caption></caption>
 
           <caption>
-            <strong>Please submit the marks carefully, as single mistake can affect whole report card</strong> <br /> {{ exam_paper }} || Theory F.M. : {{ exam_paper.theory_full_marks }} |Theory P.M. : {{ exam_paper.theory_pass_marks }} | Practical F.M. : {{ exam_paper.practical_full_marks }} | Practical P.M. : {{ exam_paper.practical_pass_marks }}
+            <strong>Below are the marks entry, you can update them if needed</strong> <br /> {{ exam_paper }} || Theory F.M. : {{ exam_paper.theory_full_marks }} |Theory P.M. : {{ exam_paper.theory_pass_marks }} | Practical F.M. : {{ exam_paper.practical_full_marks }} | Practical P.M. : {{ exam_paper.practical_pass_marks }}
           </caption>
           <thead>
             <tr>
@@ -54,27 +63,25 @@
               <th>Practical</th>
             </tr>
           </thead>
-          {% if students %}
+          {% if marks_entries is not None %}
             <tbody>
               {% csrf_token %}
-              {% for student in students %}
+              {% for marks_entry in marks_entries %}
                 <tr>
-                  <td>{{ student.roll_no }}</td>
-                  <td>{{ student.name }}</td>
+                  <td>{{ marks_entry.student.roll_no }}</td>
+                  <td>{{ marks_entry.student.name }}</td>
                   <td>
-                    <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_th_marks" class="form-control" max="{{ exam_paper.theory_full_marks }}" min="0" required />
+                    <input type="number" name="{{ exam_paper.id }}_{{ marks_entry.student.id }}_th_marks" class="form-control" max="{{ exam_paper.theory_full_marks }}" min="0" value="{{ marks_entry.theory_marks }}" required />
                   </td>
                   <td>
-                    <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_pr_marks" class="form-control" max="{{ exam_paper.practical_full_marks }}" min="0" required />
+                    <input type="number" name="{{ exam_paper.id }}_{{ marks_entry.student.id }}_pr_marks" class="form-control" max="{{ exam_paper.practical_full_marks }}" min="0" value="{{ marks_entry.practical_marks }}" required />
                   </td>
                 </tr>
               {% endfor %}
             </tbody>
-          {% else %}
-            You haven't done marks entry for this subject
           {% endif %}
         </table>
-        <button class="btn btn-success w-100">Submit Marks</button>
+        <button class="btn btn-success w-100">Update Marks</button>
       </form>
     </div>
   </div>
