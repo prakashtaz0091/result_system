@@ -377,17 +377,65 @@ def marks_entry_update(request, pk):
         return redirect('marks_entry_update_view', pk=pk)
 
 
-
-    
-
-
     #show marks entries and update form
-    
-    
-
     context = {
         'exam_paper': exam_paper,
         'marks_entries': marks_entries
     }
 
     return render(request, 'main/teacher/marks_entry_update.html',context)
+
+
+
+
+@login_required
+def marks_entry_grades_list_view(request):
+
+    grades = Grade.objects.all()
+
+    context = {
+        'grades': grades
+    }
+
+    return render(request, 'main/admin/marks_entry_grades_list.html', context)
+
+
+
+@login_required
+def marks_entry_subjects_list_view(request, pk):
+
+    try:
+        grade = get_object_or_404(Grade, pk=pk)
+    except Exception as e:
+        print(e)
+        grade = None
+
+    context = {
+        'grade': grade,
+        'exam_papers': ExamPaper.objects.filter(subject__grade = grade)
+    }
+
+    return render(request, 'main/admin/marks_entry_subjects_list.html', context)
+
+
+class MarksEntryListView(ListView):
+    model = MarksEntry
+    template_name = 'main/admin/marks_entry_list.html'
+    context_object_name = 'marks_entries'
+
+    def get_queryset(self):
+        # Get the pk value from the URL kwargs
+        pk = self.kwargs.get('pk')
+        
+        try:
+            exam_paper = get_object_or_404(ExamPaper, pk=pk)
+        except Exception as e:
+            print(e)
+        else:
+            # Filter the queryset using the pk
+            queryset = super().get_queryset().filter(exam_paper=exam_paper)  # Replace `some_field` with the relevant field
+            
+            return queryset
+    
+
+    

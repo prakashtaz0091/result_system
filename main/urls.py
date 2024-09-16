@@ -85,6 +85,12 @@ urlpatterns = [
                 path('papers/create/', login_required(views.ExamPaperCreateView.as_view()), name='papers_create_view'),
                 path('papers/update/<int:pk>/', login_required(views.ExamPaperUpdateView.as_view()), name='papers_update_view'),
                 path('papers/delete/<int:pk>/', login_required(views.ExamPaperDeleteView.as_view()), name='papers_delete_view'),  
+
+
+                #marks entries
+                path('marks_entries/grades/', views.marks_entry_grades_list_view, name='marks_entry_grades_list_view'),
+                path('marks_entries/subjects/<int:pk>/', views.marks_entry_subjects_list_view, name='marks_entry_subjects_list_view'),
+                path('marks_entries/<int:pk>/', login_required(views.MarksEntryListView.as_view()), name='marks_entries_view'),
             ]
         )
         

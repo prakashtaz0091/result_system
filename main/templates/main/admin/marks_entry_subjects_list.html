@@ -1,15 +1,34 @@
 {% extends 'main/admin/admin_base.html' %}
 
 {% block title %}
-  Admin
+  Marks Entries Subjects
 {% endblock %}
 
 {% block extra_css %}
   <style>
+    .wrapper {
+      margin-top: 6px;
+    
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+    
     .card-button {
       text-decoration: none;
-      width: 200px;
-      height: 150px;
+      padding: 1rem;
       background: #ffffff;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
@@ -44,14 +63,18 @@
 {% endblock %}
 
 {% block main_content %}
+  <div class="container wrapper">
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'marks_entry_grades_list_view' %}" class="btn btn-primary btn-sm">&lt; Back</a>
+    </div>
+  </div>
+
   <div class="container mt-5">
-    <div class="d-flex justify-content-center gap-5 flex-wrap">
-      <a href="{% url 'teachers_view' %}" class="card-button">Teachers</a>
-      <a href="{% url 'grades_view' %}" class="card-button">Grades</a>
-      <a href="{% url 'subjects_view' %}" class="card-button">Subjects</a>
-      <a href="{% url 'exams_view' %}" class="card-button">Exams</a>
-      <a href="{% url 'papers_view' %}" class="card-button">Exam Papers</a>
-      <a href="{% url 'marks_entry_grades_list_view' %}" class="card-button">Marks Entries</a>
+    <h5 class="border p-2 text-center">{{ grade.name }} Exams</h5>
+    <div class="d-flex flex-column justify-content-center gap-1 flex-wrap">
+      {% for exam_paper in exam_papers %}
+        <a href="{% url 'marks_entries_view' exam_paper.id %}" class="card-button">{{ exam_paper }}</a>
+      {% endfor %}
     </div>
   </div>
 {% endblock %}
