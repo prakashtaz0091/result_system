@@ -73,9 +73,19 @@
       Choose Exam Paper (i.e. subject) for marks entry
     </h5>
     <div class="d-flex justify-content-center gap-5 flex-wrap">
-      {% for exam_paper in exam_papers %}
-        <a href="{% url 'marks_entry_view' exam_paper.id %}" class="card-button">{{ exam_paper.subject.name }} <br /> {{ exam_paper.subject.grade }}</a>
-      {% endfor %}
+      {% if exam_papers %}
+        {% for exam_paper in exam_papers %}
+          <a href="{% url 'marks_entry_view' exam_paper.id %}" class="card-button">
+            {{ exam_paper.subject.name }} <br /> {{ exam_paper.subject.grade }}
+
+            {% if exam_paper.marks_entry_done %}
+              <i class="bi bi-check-circle-fill"></i>
+            {% endif %}
+          </a>
+        {% endfor %}
+      {% else %}
+        No exam papers for you
+      {% endif %}
     </div>
   </div>
 {% endblock %}

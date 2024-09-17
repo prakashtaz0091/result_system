@@ -50,8 +50,8 @@
               <th class="align-middle" colspan="2">Obtained Marks</th>
             </tr>
             <tr>
-              <th>Theory</th>
-              <th>Practical</th>
+              <th>Theory [ F.M. : {{ exam_paper.theory_full_marks }} ]</th>
+              <th>Practical [ F.M. : {{ exam_paper.practical_full_marks }} ]</th>
             </tr>
           </thead>
           {% if students %}
@@ -65,13 +65,13 @@
                     <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_th_marks" class="form-control" max="{{ exam_paper.theory_full_marks }}" min="0" required />
                   </td>
                   <td>
-                    <input type="number" name="{{ exam_paper.id }}_{{ student.id }}_pr_marks" class="form-control" max="{{ exam_paper.practical_full_marks }}" min="0" required />
+                    <input type="number" value="{% if exam_paper.practical_full_marks == 0 %}0{% endif %}" name="{{ exam_paper.id }}_{{ student.id }}_pr_marks" class="form-control" max="{{ exam_paper.practical_full_marks }}" min="0" required />
                   </td>
                 </tr>
               {% endfor %}
             </tbody>
           {% else %}
-            You haven't done marks entry for this subject
+            Please request {{ exam_paper.subject.grade.name }}'s class teacher {{ exam_paper.subject.grade.teacher }}, to add students
           {% endif %}
         </table>
         <button class="btn btn-success w-100">Submit Marks</button>

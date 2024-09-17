@@ -46,8 +46,8 @@
           </tr>
         </thead>
 
-        {% if teachers %}
-          <tbody>
+        <tbody>
+          {% if teachers %}
             {% for teacher in teachers %}
               <tr>
                 <td>{{ teacher.username }}</td>
@@ -60,10 +60,12 @@
                 </td>
               </tr>
             {% endfor %}
-          </tbody>
-        {% else %}
-          No Teachers
-        {% endif %}
+          {% else %}
+            <tr>
+              <td colspan="3">No Teachers</td>
+            </tr>
+          {% endif %}
+        </tbody>
       </table>
     </div>
   </div>

@@ -51,8 +51,8 @@
             <th>Practical</th>
           </tr>
         </thead>
-        {% if marks_entries %}
-          <tbody>
+        <tbody>
+          {% if marks_entries %}
             {% for marks_entry in marks_entries %}
               <tr>
                 <td>{{ marks_entry.student.roll_no }}</td>
@@ -61,10 +61,12 @@
                 <td>{{ marks_entry.practical_marks }}</td>
               </tr>
             {% endfor %}
-          </tbody>
-        {% else %}
-          marks entry not done for this exam paper
-        {% endif %}
+          {% else %}
+            <tr>
+              <td colspan="4">Marks Entry not done for this paper</td>
+            </tr>
+          {% endif %}
+        </tbody>
       </table>
       {% comment %} <button class="btn btn-success w-100">Submit Marks</button> {% endcomment %}
     </div>

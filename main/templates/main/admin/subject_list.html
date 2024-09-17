@@ -30,8 +30,18 @@
 
 {% block main_content %}
   <div class="container wrapper">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-items-center">
       <a href="{% url 'admin_view' %}" class="btn btn-primary">&lt; Back</a>
+      <form action="{% url 'subjects_filtered_view' %}" method="get" class="d-flex gap-1 align-items-center">
+        <h5>Filters</h5>
+        <select class="form-select" aria-label="Default select example" name="grade_id">
+          <option value="">Grades</option>
+          {% for grade in grades %}
+            <option value="{{ grade.id }}">{{ grade.name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success btn-sm">Apply</button>
+      </form>
       <a href="{% url 'subjects_create_view' %}" class="btn btn-primary">+ Add Subject</a>
     </div>
 
@@ -40,6 +50,7 @@
         <caption>Subjects list</caption>
         <thead>
           <tr>
+            <th scope="col">S.N.</th>
             <th scope="col">Subject Name</th>
             <th scope="col">Grade</th>
             <th scope="col">Subject Teacher</th>
@@ -47,10 +58,11 @@
           </tr>
         </thead>
 
-        {% if subjects %}
-          <tbody>
+        <tbody>
+          {% if subjects %}
             {% for subject in subjects %}
               <tr>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ subject.name }}</td>
                 <td>{{ subject.grade.name }}</td>
                 <td>{{ subject.subject_teacher.first_name|default:subject.subject_teacher.username }}
@@ -63,10 +75,12 @@
                 </td>
               </tr>
             {% endfor %}
-          </tbody>
-        {% else %}
-          No Subjects
-        {% endif %}
+          {% else %}
+            <tr>
+              <td colspan="5">No Subjects</td>
+            </tr>
+          {% endif %}
+        </tbody>
       </table>
     </div>
   </div>

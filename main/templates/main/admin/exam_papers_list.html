@@ -18,8 +18,7 @@
     }
     
     /* Sticky header to keep it fixed while scrolling */
-    thead th,
-    table > caption {
+    thead {
       position: sticky;
       top: 0;
       background: #f8f9fa; /* Light background for header */
@@ -30,16 +29,47 @@
 
 {% block main_content %}
   <div class="container wrapper">
-    <div class="d-flex justify-content-between">
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
       <a href="{% url 'admin_view' %}" class="btn btn-primary">&lt; Back</a>
+      <form action="{% url 'papers_filtered_view' %}" method="get" class="d-flex gap-1 align-items-center">
+        <h5>Filters</h5>
+        <select class="form-select" aria-label="Default select example" name="grade_id">
+          <option value="">Grades</option>
+          {% for grade in grades %}
+            <option value="{{ grade.id }}">{{ grade.name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success btn-sm">Apply</button>
+      </form>
       <a href="{% url 'papers_create_view' %}" class="btn btn-primary">+ Add Exam Paper</a>
     </div>
-
+    <hr />
+    <h5 class="">Create Exam Papers for all subjects</h5>
+    <form action="{% url 'create_exam_paper_for_all_subjects' %}" method="get" class="d-flex gap-1 align-items-center mt-1">
+      <select class="form-select" aria-label="Default select example" name="exam_id">
+        <option value="">Exams</option>
+        {% for exam in exams %}
+          <option value="{{ exam.id }}">{{ exam }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-success btn-sm">Create</button>
+    </form>
     <div class="table-wrapper">
       <table class="table table-striped table-dark table-hover table-bordered caption-top mt-5 text-center">
         <caption>Exam Papers list</caption>
         <thead>
           <tr>
+            <th class="align-middle" rowspan="2">S.N.</th>
             <th class="align-middle" rowspan="2">Examination</th>
             <th class="align-middle" rowspan="2">Subject</th>
             <th class="align-middle" rowspan="2">Grade</th>
@@ -54,17 +84,19 @@
             <th>Pr</th>
           </tr>
         </thead>
-        {% if exam_papers %}
-          <tbody>
+        <tbody>
+          {% if exam_papers %}
             {% for paper in exam_papers %}
               <tr>
+                <td>{{ forloop.counter }}</td>
+
                 <td>{{ paper.exam }}</td>
                 <td>{{ paper.subject.name }}</td>
                 <td>{{ paper.subject.grade.name }}</td>
-                <td>{{ paper.theory_full_marks }}</td>
-                <td>{{ paper.practical_full_marks }}</td>
-                <td>{{ paper.theory_pass_marks }}</td>
-                <td>{{ paper.practical_pass_marks }}</td>
+                <td class="{% if paper.theory_full_marks == 0 %} text-warning {% endif %}">{{ paper.theory_full_marks }}</td>
+                <td class="{% if paper.practical_full_marks == 0 %} text-warning {% endif %}">{{ paper.practical_full_marks }}</td>
+                <td class="{% if paper.theory_pass_marks == 0 %} text-warning {% endif %}">{{ paper.theory_pass_marks }}</td>
+                <td class="{% if paper.practical_pass_marks == 0 %} text-warning {% endif %}">{{ paper.practical_pass_marks }}</td>
                 <td>
                   <div class="d-flex gap-1">
                     <a href="{% url 'papers_update_view' paper.id %}" class="btn btn-success btn-sm">Edit</a>
@@ -73,10 +105,12 @@
                 </td>
               </tr>
             {% endfor %}
-          </tbody>
-        {% else %}
-          No exam papers
-        {% endif %}
+          {% else %}
+            <tr>
+              <td colspan="9">No Exam Papers</td>
+            </tr>
+          {% endif %}
+        </tbody>
       </table>
     </div>
   </div>

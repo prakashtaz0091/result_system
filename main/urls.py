@@ -67,6 +67,7 @@ urlpatterns = [
 
                 #subjects
                 path('subjects/', login_required(views.SubjectListView.as_view()), name='subjects_view'),
+                path('subjects/grade/', login_required(views.SubjectFilteredListView.as_view()), name='subjects_filtered_view'),
                 path('subjects/create/', login_required(views.SubjectCreateView.as_view()), name='subjects_create_view'),
                 path('subjects/update/<int:pk>/', login_required(views.SubjectUpdateView.as_view()), name='subjects_update_view'),
                 path('subjects/delete/<int:pk>/', login_required(views.SubjectDeleteView.as_view()), name='subjects_delete_view'),
@@ -82,7 +83,10 @@ urlpatterns = [
 
                 #papers
                 path('papers/', login_required(views.ExamPaperListView.as_view()), name='papers_view'),
+                path('papers/grade/', login_required(views.ExamPaperFilteredListView.as_view()), name='papers_filtered_view'),
+                path('papers/add_all_subjects/', login_required(views.ExamPaperFilteredListView.as_view()), name='papers_filtered_view'),
                 path('papers/create/', login_required(views.ExamPaperCreateView.as_view()), name='papers_create_view'),
+                path('papers/create/all_subjects/', login_required(views.create_exam_paper_for_all_subjects), name='create_exam_paper_for_all_subjects'),
                 path('papers/update/<int:pk>/', login_required(views.ExamPaperUpdateView.as_view()), name='papers_update_view'),
                 path('papers/delete/<int:pk>/', login_required(views.ExamPaperDeleteView.as_view()), name='papers_delete_view'),  
 

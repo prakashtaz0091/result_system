@@ -25,40 +25,6 @@
       background: #f8f9fa; /* Light background for header */
       z-index: 1;
     }
-    
-    .card-button {
-      text-decoration: none;
-      padding: 1rem;
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .card-button:hover {
-      background-color: #007bff;
-      color: #ffffff;
-      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
-      transform: translateY(-5px);
-      border-color: #007bff;
-    }
-    
-    .card-button:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
-    }
   </style>
 {% endblock %}
 
@@ -71,9 +37,15 @@
 
   <div class="container mt-5">
     <h5 class="border p-2 text-center">{{ grade.name }} Exams</h5>
-    <div class="d-flex flex-column justify-content-center gap-1 flex-wrap">
+    <div class="d-flex flex-column justify-content-center flex-wrap">
       {% for exam_paper in exam_papers %}
-        <a href="{% url 'marks_entries_view' exam_paper.id %}" class="card-button">{{ exam_paper }}</a>
+        <a href="{% url 'marks_entries_view' exam_paper.id %}" class="card-button">
+          <small>{{ exam_paper.subject.subject_teacher.first_name }} {{ exam_paper.subject.subject_teacher.last_name }} | {{ exam_paper }}</small>
+
+          {% if exam_paper.marks_entry_done %}
+            <i class="bi bi-check-circle-fill"></i>
+          {% endif %}
+        </a>
       {% endfor %}
     </div>
   </div>

@@ -46,8 +46,8 @@
           </tr>
         </thead>
 
-        {% if exams %}
-          <tbody>
+        <tbody>
+          {% if exams %}
             {% for exam in exams %}
               <tr>
                 <th scope="row">{{ exam.name }}</th>
@@ -60,10 +60,12 @@
                 </td>
               </tr>
             {% endfor %}
-          </tbody>
-        {% else %}
-          No Exams
-        {% endif %}
+          {% else %}
+            <tr>
+              <td colspan="3">No Exams</td>
+            </tr>
+          {% endif %}
+        </tbody>
       </table>
     </div>
   </div>

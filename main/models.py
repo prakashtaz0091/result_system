@@ -66,6 +66,7 @@ class ExamPaper(models.Model):
     theory_pass_marks = models.IntegerField()
     practical_full_marks = models.IntegerField()
     practical_pass_marks = models.IntegerField()
+    marks_entry_done = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('exam', 'subject')

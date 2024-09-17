@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .helpers import get_paper_student_marks
-
+from django.views.decorators.http import require_http_methods, require_GET
 
 
 
@@ -157,12 +157,48 @@ class SubjectListView(ListView):
     context_object_name = 'subjects'
 
 
+    #add grades data to context
+    def get_context_data(self, **kwargs):
+        # Get the default context data from the superclass
+        context = super().get_context_data(**kwargs)
+        # Add extra context data
+        context['grades'] = Grade.objects.all()  # Assuming Grade is the related model
+        
+        return context
+    
+
+
+#filter subjects list view
+class SubjectFilteredListView(ListView):
+    model = Subject
+    template_name = 'main/admin/subject_list.html'
+    context_object_name = 'subjects'
+
+
+    def get_queryset(self):
+        grade_id = self.request.GET.get('grade_id')
+        if grade_id:
+            return Subject.objects.filter(grade__id=grade_id)
+        return Subject.objects.all()
+
+    #add grades data to context
+    def get_context_data(self, **kwargs):
+        # Get the default context data from the superclass
+        context = super().get_context_data(**kwargs)
+        # Add extra context data
+        context['grades'] = Grade.objects.all()  # Assuming Grade is the related model
+        
+        return context
+
 
 class SubjectCreateView(CreateView):
     model = Subject
     form_class = forms.SubjectForm
     template_name = 'main/admin/subject_create.html'
-    success_url = reverse_lazy('subjects_view')
+    
+    def get_success_url(self):
+        current_subject_added_grade = self.request.POST.get('grade')
+        return f"{reverse_lazy('subjects_filtered_view')}?grade_id={current_subject_added_grade}"
 
 
 
@@ -226,6 +262,40 @@ class ExamPaperListView(ListView):
     template_name = 'main/admin/exam_papers_list.html'
     context_object_name = 'exam_papers'
 
+        #add grades data to context
+    def get_context_data(self, **kwargs):
+        # Get the default context data from the superclass
+        context = super().get_context_data(**kwargs)
+        # Add extra context data
+        context['grades'] = Grade.objects.all()  #  Grade is the related model
+        context['exams'] = Exam.objects.all()
+        
+        return context
+
+
+class ExamPaperFilteredListView(ListView):
+    model = ExamPaper
+    template_name = 'main/admin/exam_papers_list.html'
+    context_object_name = 'exam_papers'
+
+
+    def get_queryset(self):
+        grade_id = self.request.GET.get('grade_id')
+        if grade_id:
+            return ExamPaper.objects.filter(subject__grade__id=grade_id)
+        return ExamPaper.objects.all()
+
+    #add grades data to context
+    def get_context_data(self, **kwargs):
+        # Get the default context data from the superclass
+        context = super().get_context_data(**kwargs)
+        # Add extra context data
+        context['grades'] = Grade.objects.all()  # Assuming Grade is the related model
+        context['exams'] = Exam.objects.all()
+
+        return context
+
+
 
 class ExamPaperCreateView(CreateView):
     model = ExamPaper
@@ -235,11 +305,50 @@ class ExamPaperCreateView(CreateView):
 
 
 
+@require_GET
+def create_exam_paper_for_all_subjects(request):
+    exam_id = request.GET.get('exam_id')
+    subjects = Subject.objects.all()
+    if exam_id:
+        try:
+            exam = get_object_or_404(Exam, pk=exam_id)
+        except Exam.DoesNotExist:
+            messages.warning(request, 'Please select an exam')
+            return redirect('papers_view')
+        else:
+            for subject in subjects:
+                try:
+                    exam_paper = ExamPaper.objects.get(exam=exam, subject=subject)
+                except ExamPaper.DoesNotExist:
+                    ExamPaper.objects.create(
+                        exam=exam,
+                        subject=subject,
+                        theory_full_marks=0,
+                        theory_pass_marks=0,
+                        practical_full_marks=0,
+                        practical_pass_marks=0,
+                    )
+                
+            messages.success(request, 'Exam papers created successfully, Please edit the default marks values highlighted')
+            return redirect('papers_view')
+
+    else:
+        messages.warning(request, 'Please select an exam')
+        return redirect('papers_view')
+    
+
+
+
 class ExamPaperUpdateView(UpdateView):
     model = ExamPaper
     form_class = forms.ExamPaperForm
     template_name = 'main/admin/exam_papers_update.html'
-    success_url = reverse_lazy('papers_view')
+    # success_url = reverse_lazy('papers_view')
+
+    def get_success_url(self):
+        subject_id = self.request.POST.get('subject')
+        grade_id = get_object_or_404(Subject, pk=subject_id).grade.id
+        return f"{reverse('papers_filtered_view')}?grade_id={grade_id}"
 
 
 
@@ -258,7 +367,15 @@ Subjects
 @login_required
 def subjects_view(request):
     exam_papers = ExamPaper.objects.filter(subject__subject_teacher=request.user)
-    return render(request, 'main/teacher/subjects.html', {'exam_papers': exam_papers})
+
+
+    context = {
+        'exam_papers': exam_papers,
+        
+    }
+
+
+    return render(request, 'main/teacher/subjects.html',context)
 
 
 """
@@ -266,7 +383,7 @@ marks entry
 """
 @login_required
 def marks_entry(request, pk):
-
+    exam_paper = get_object_or_404(ExamPaper, pk=pk)
 
     #handle marks entry
     if request.method == 'POST':
@@ -288,11 +405,15 @@ def marks_entry(request, pk):
             
 
             MarksEntry.objects.create(
-                exam_paper = get_object_or_404(ExamPaper, pk=exam_paper_id),
+                exam_paper = exam_paper,
                 student = get_object_or_404(Student, pk=student_id),
                 theory_marks = theory_marks,
                 practical_marks = practical_marks
             )
+
+        #change marks_entry_done status for exam_paper
+        exam_paper.marks_entry_done = True
+        exam_paper.save()
 
         message = "Marks entered successfully. Thank you"
         messages.success(request, message)
@@ -328,7 +449,9 @@ def marks_entry(request, pk):
 
 
 
-#marks entry update view
+"""
+marks entry update view
+"""
 @login_required
 def marks_entry_update(request, pk):
     
@@ -371,7 +494,9 @@ def marks_entry_update(request, pk):
             
             marks_entry.save()
             
-
+        #change marks_entry_done status for exam_paper
+        exam_paper.marks_entry_done = True
+        exam_paper.save()
         message = "Marks updated successfully. Thank you"
         messages.success(request, message)
         return redirect('marks_entry_update_view', pk=pk)
