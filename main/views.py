@@ -9,7 +9,7 @@ from .import forms
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from .helpers import get_paper_student_marks, get_students_marks_for_grade
+from .helpers import get_paper_student_marks, get_students_marks_for_grade, students_marks_describe
 from django.views.decorators.http import require_http_methods, require_GET
 
 
@@ -570,6 +570,18 @@ def generate_report_cards_for_grade(request, grade_id):
     grade = get_object_or_404(Grade, pk=grade_id)
 
     student_wise_subject_marks = get_students_marks_for_grade(grade)
+    # print(student_wise_subject_marks)
+
+    student_marks_with_calculations = students_marks_describe(student_wise_subject_marks)
+
+
+
+    context = {
+        'students_marks':student_marks_with_calculations
+    }
+
+    import pprint
+    pprint.pprint(student_marks_with_calculations)
     
-    return render(request, 'main/admin/report_cards.html', {'students':[1,2,3,4,5,5,6,6,6,]})
+    return render(request, 'main/admin/report_cards.html',context)
 
