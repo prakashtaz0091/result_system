@@ -1,0 +1,621 @@
+{% load static %}
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      }
+      @media print {
+        .container {
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+        }
+        .report-card {
+          width: 48%; /* Two cards side by side with some space between */
+          margin: 1%;
+          border: 0.5px solid #000; /* Narrow border */
+          padding: 10px;
+          box-sizing: border-box;
+          page-break-inside: avoid;
+          position: relative;
+        }
+        @page {
+          size: A4 landscape;
+          margin: 0.2cm; /* Narrow margins */
+        }
+      }
+      .school-logo > img {
+        height: 60px;
+        object-fit: contain;
+        position: absolute;
+        left: 30px;
+        top: 10px;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 0.2px solid #000; /* Narrow border */
+        padding: 4px; /* Reduced padding */
+        text-align: left;
+      }
+      thead,
+      th {
+        text-align: center;
+        font-size: smaller;
+      }
+      
+      .text-uppercase {
+        text-transform: uppercase;
+      }
+      .text-center {
+        text-align: center;
+      }
+      
+      .report-header {
+        line-height: 1;
+      }
+      .school-name {
+        font-size: medium;
+      
+        font-weight: 800;
+        line-height: 0.1;
+        margin-top: 1rem;
+      }
+      .address,
+      .recognition {
+        font-size: 0.6rem;
+        margin: 0.2rem auto;
+        font-weight: 600;
+      }
+      .examination {
+        font-size: 0.8rem;
+        margin: 0.2rem auto;
+        font-weight: 600;
+      }
+      .student-details {
+        font-size: 0.6rem;
+        font-weight: 800;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.2rem;
+        margin-top: 0.1rem;
+      }
+      tbody > tr > td {
+        text-align: center;
+        font-size: 0.6rem;
+        font-weight: 500;
+      }
+      .text-align-left {
+        text-align: left;
+      }
+      .text-align-right {
+        text-align: right;
+      }
+      .text-bold {
+        font-weight: bold;
+      }
+      .inner-head {
+        font-size: 0.6rem;
+        font-weight: bolder !important;
+      }
+      .report-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: auto 2rem;
+        margin-top: 80px;
+      }
+      .school-seal {
+        position: relative;
+      }
+      .school-seal > img {
+        height: 60px;
+        object-fit: contain;
+        position: absolute;
+        bottom: -5px;
+        left: 15px;
+      }
+      .report-footer p {
+        font-size: 0.8rem;
+        text-decoration: overline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="report-card">
+        <div class="text-center report-header">
+          <div class="school-logo">
+            <img src="{% static 'main/images/school_logo.jpg' %}" alt="not found" />
+          </div>
+          <h2 class="text-uppercase school-name">Janaki Secondary Boarding School</h2>
+          <div class="address">Biratnagar-11, Morang | Contact no.: 021-570548</div>
+          <div class="recognition">(Recognized by the Government of Nepal)</div>
+          <div class="examination">First Term Report Card - 2081 B.S.</div>
+        </div>
+        <div class="student-details">
+          <span>Name : Bikram Rajbanshi</span>
+          <span>Class : 9</span>
+          <span>Sec : A</span>
+          <span>Roll No. : 20</span>
+        </div>
+
+        <!-- - Report Card table -->
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2">Subject</th>
+              <th colspan="2">Full Marks</th>
+              <th colspan="2">Pass Marks</th>
+              <th colspan="2">Marks Obtained</th>
+              <th rowspan="2">Final Grade</th>
+              <th rowspan="2">Grade Point</th>
+              <th rowspan="2">Remarks</th>
+            </tr>
+            <tr>
+              <th>PR</th>
+              <th>TH</th>
+              <th>PR</th>
+              <th>TH</th>
+              <th>PR</th>
+              <th>TH</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grand Total</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td colspan="2">80</td>
+
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td colspan="10">Grade Point Average &nbsp; : &nbsp; 4.00</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Result Summary</td>
+            </tr>
+            <tr>
+              <td colspan="3">GPA</td>
+              <td colspan="3">Grade</td>
+              <td colspan="2">Percentage</td>
+              <td colspan="2">Rank</td>
+            </tr>
+            <tr>
+              <td colspan="3">4.0</td>
+              <td colspan="3">A</td>
+              <td colspan="2">98%</td>
+              <td colspan="2">First</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Profile Report</td>
+            </tr>
+            <tr>
+              <td colspan="2">Discipline</td>
+              <td colspan="2">Hygiene</td>
+              <td colspan="2">Conversation</td>
+              <td colspan="2">Reading</td>
+              <td>Writing</td>
+              <td colspan="2">Regularity</td>
+            </tr>
+            <tr>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Outstanding</td>
+              <td>Excellent</td>
+              <td colspan="2">Better</td>
+            </tr>
+            <tr>
+              <td colspan="5" class="text-align-left">Examination Held From &nbsp; : &nbsp; Baisakh 1 - Baisakh 20</td>
+              <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp; Overall Good</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Details of Grade Sheet</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Percentage</td>
+              <td colspan="2">>90%</td>
+              <td>>80%</td>
+              <td colspan="2">>70%</td>
+              <td>>60%</td>
+              <td>>50%</td>
+              <td>>=40%</td>
+              <td>&lt;40%</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grade</td>
+              <td colspan="2">A+</td>
+              <td>A</td>
+              <td colspan="2">B+</td>
+              <td>B</td>
+              <td>C+</td>
+              <td>C</td>
+              <td>D</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grade Points</td>
+              <td colspan="2">4</td>
+              <td>3.6</td>
+              <td colspan="2">3.2</td>
+              <td>2.8</td>
+              <td>2.4</td>
+              <td>2</td>
+              <td>NG</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Remarks</td>
+              <td colspan="2">Outstanding</td>
+              <td>Excellent</td>
+              <td colspan="2">Very Good</td>
+              <td>Good</td>
+              <td>Satisfactory</td>
+              <td>Acceptable</td>
+              <td>Insufficient</td>
+            </tr>
+          </tbody>
+          <!-- Add more rows as needed -->
+        </table>
+        <div class="report-footer">
+          <div class="teacher-sign">
+            <p>&nbsp; &nbsp; Teacher Sign &nbsp; &nbsp;</p>
+          </div>
+          <div class="school-seal">
+            <div class="school-seal">
+              <img src="{% static 'main/images/school_seal.jpg' %}" alt="not found" />
+            </div>
+            <p>&nbsp; &nbsp;School Seal&nbsp; &nbsp;</p>
+          </div>
+          <div class="principal-sign">
+            <p>&nbsp; &nbsp;Principal Sign&nbsp; &nbsp;</p>
+          </div>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="text-center report-header">
+          <div class="school-logo">
+            <img src="{% static 'main/images/school_logo.jpg' %}" alt="not found" />
+          </div>
+          <h2 class="text-uppercase school-name">Janaki Secondary Boarding School</h2>
+          <div class="address">Biratnagar-11, Morang | Contact no.: 021-570548</div>
+          <div class="recognition">(Recognized by the Government of Nepal)</div>
+          <div class="examination">First Term Report Card - 2081 B.S.</div>
+        </div>
+        <div class="student-details">
+          <span>Name : Bikram Rajbanshi</span>
+          <span>Class : 9</span>
+          <span>Sec : A</span>
+          <span>Roll No. : 20</span>
+        </div>
+
+        <!-- - Report Card table -->
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2">Subject</th>
+              <th colspan="2">Full Marks</th>
+              <th colspan="2">Pass Marks</th>
+              <th colspan="2">Marks Obtained</th>
+              <th rowspan="2">Final Grade</th>
+              <th rowspan="2">Grade Point</th>
+              <th rowspan="2">Remarks</th>
+            </tr>
+            <tr>
+              <th>PR</th>
+              <th>TH</th>
+              <th>PR</th>
+              <th>TH</th>
+              <th>PR</th>
+              <th>TH</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">English</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td>80</td>
+              <td>80</td>
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grand Total</td>
+              <td>100</td>
+              <td>100</td>
+              <td>40</td>
+              <td>40</td>
+              <td colspan="2">80</td>
+
+              <td>A</td>
+              <td>4.00</td>
+              <td>Pass</td>
+            </tr>
+            <tr>
+              <td colspan="10">Grade Point Average &nbsp; : &nbsp; 4.00</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Result Summary</td>
+            </tr>
+            <tr>
+              <td colspan="3">GPA</td>
+              <td colspan="3">Grade</td>
+              <td colspan="2">Percentage</td>
+              <td colspan="2">Rank</td>
+            </tr>
+            <tr>
+              <td colspan="3">4.0</td>
+              <td colspan="3">A</td>
+              <td colspan="2">98%</td>
+              <td colspan="2">First</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Profile Report</td>
+            </tr>
+            <tr>
+              <td colspan="2">Discipline</td>
+              <td colspan="2">Hygiene</td>
+              <td colspan="2">Conversation</td>
+              <td colspan="2">Reading</td>
+              <td>Writing</td>
+              <td colspan="2">Regularity</td>
+            </tr>
+            <tr>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Excellent</td>
+              <td colspan="2">Outstanding</td>
+              <td>Excellent</td>
+              <td colspan="2">Better</td>
+            </tr>
+            <tr>
+              <td colspan="5" class="text-align-left">Examination Held From &nbsp; : &nbsp; Baisakh 1 - Baisakh 20</td>
+              <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp; Overall Good</td>
+            </tr>
+            <tr>
+              <td colspan="10" class="inner-head">Details of Grade Sheet</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Percentage</td>
+              <td colspan="2">>90%</td>
+              <td>>80%</td>
+              <td colspan="2">>70%</td>
+              <td>>60%</td>
+              <td>>50%</td>
+              <td>>=40%</td>
+              <td>&lt;40%</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grade</td>
+              <td colspan="2">A+</td>
+              <td>A</td>
+              <td colspan="2">B+</td>
+              <td>B</td>
+              <td>C+</td>
+              <td>C</td>
+              <td>D</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Grade Points</td>
+              <td colspan="2">4</td>
+              <td>3.6</td>
+              <td colspan="2">3.2</td>
+              <td>2.8</td>
+              <td>2.4</td>
+              <td>2</td>
+              <td>NG</td>
+            </tr>
+            <tr>
+              <td class="text-align-left">Remarks</td>
+              <td colspan="2">Outstanding</td>
+              <td>Excellent</td>
+              <td colspan="2">Very Good</td>
+              <td>Good</td>
+              <td>Satisfactory</td>
+              <td>Acceptable</td>
+              <td>Insufficient</td>
+            </tr>
+          </tbody>
+          <!-- Add more rows as needed -->
+        </table>
+        <div class="report-footer">
+          <div class="teacher-sign">
+            <p>&nbsp; &nbsp; Teacher Sign &nbsp; &nbsp;</p>
+          </div>
+          <div class="school-seal">
+            <div class="school-seal">
+              <img src="{% static 'main/images/school_seal.jpg' %}" alt="not found" />
+            </div>
+            <p>&nbsp; &nbsp;School Seal&nbsp; &nbsp;</p>
+          </div>
+          <div class="principal-sign">
+            <p>&nbsp; &nbsp;Principal Sign&nbsp; &nbsp;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    //add Ctrl+P
+  </script>
+</html>
