@@ -125,6 +125,7 @@ def add_grand_total(temp_dict):
                 'remarks': '',
                 'percentage': 0.0,
                 'rank': '',
+                'fail': False,
             }
             
         for subject_name, subject_data in student_related_data['marks'].items():
@@ -134,6 +135,10 @@ def add_grand_total(temp_dict):
             student_related_data['grand_total']['practical_pass_marks'] += subject_data['total_marks']['practical']['pass']
             student_related_data['grand_total']['total_marks'] += subject_data['total_marks']['theory']['full'] + subject_data['total_marks']['practical']['full']
             student_related_data['grand_total']['obtained_marks'] += subject_data['obtained_marks']['theory_marks'] + subject_data['obtained_marks']['practical_marks']
+
+            #check if pass or fail
+            if subject_data['obtained_marks']['theory_marks'] < subject_data['total_marks']['theory']['pass'] or subject_data['obtained_marks']['practical_marks'] < subject_data['total_marks']['practical']['pass']:  
+                student_related_data['grand_total']['fail'] = True
 
     return temp_dict
 

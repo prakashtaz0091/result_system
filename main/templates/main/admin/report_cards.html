@@ -244,12 +244,37 @@
                   <td>{{ related_data.grand_total.theory_pass_marks }}</td>
                   <td colspan="2">{{ related_data.grand_total.obtained_marks }}</td>
 
-                  <td>{{ related_data.grand_total.final_grade }}</td>
-                  <td>{{ related_data.grand_total.final_grade_point }}</td>
-                  <td>{{ related_data.grand_total.remarks }}</td>
+                  <td>
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.final_grade }}
+                    {% endif %}
+                  </td>
+
+                  <td>
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.final_grade_point }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.remarks }}
+                    {% endif %}
+                  </td>
                 </tr>
                 <tr>
-                  <td colspan="10">Grade Point Average &nbsp; : &nbsp; {{ related_data.grand_total.final_grade }}</td>
+                  <td colspan="10">
+                    Grade Point Average &nbsp; : &nbsp;{% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.final_grade }}
+                    {% endif %}
+                  </td>
                   {% comment %} <td colspan="10">Grade Point Average &nbsp; : &nbsp; {{ related_data.gpa|floatformat:1 }}</td> {% endcomment %}
                 </tr>
                 <tr>
@@ -262,10 +287,34 @@
                   <td colspan="2">Rank</td>
                 </tr>
                 <tr>
-                  <td colspan="3">{{ related_data.grand_total.final_grade_point }}</td>
-                  <td colspan="3">{{ related_data.grand_total.final_grade }}</td>
-                  <td colspan="2">{{ related_data.grand_total.percentage }} %</td>
-                  <td colspan="2">{{ related_data.grand_total.rank|ordinal }}</td>
+                  <td colspan="3">
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.final_grade_point }}
+                    {% endif %}
+                  </td>
+                  <td colspan="3">
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.final_grade }}
+                    {% endif %}
+                  </td>
+                  <td colspan="2">
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.percentage }} %
+                    {% endif %}
+                  </td>
+                  <td colspan="2">
+                    {% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.rank|ordinal }}
+                    {% endif %}
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="10" class="inner-head">Profile Report</td>
@@ -291,7 +340,13 @@
                   <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
                 </tr>
                 <tr>
-                  <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp; {{ related_data.grand_total.remarks }}</td>
+                  <td colspan="10" class="text-align-left">
+                    Remarks &nbsp; : &nbsp;{% if related_data.grand_total.fail %}
+                      Fail
+                    {% else %}
+                      {{ related_data.grand_total.remarks }}
+                    {% endif %}
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="10" class="inner-head">Details of Grade Sheet</td>
