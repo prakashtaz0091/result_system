@@ -308,13 +308,7 @@
                       {{ related_data.grand_total.percentage }} %
                     {% endif %}
                   </td>
-                  <td colspan="2">
-                    {% if related_data.grand_total.fail %}
-                      Fail
-                    {% else %}
-                      {{ related_data.grand_total.rank|ordinal }}
-                    {% endif %}
-                  </td>
+                  <td colspan="2">{{ related_data.grand_total.rank|ordinal }}</td>
                 </tr>
                 <tr>
                   <td colspan="10" class="inner-head">Profile Report</td>

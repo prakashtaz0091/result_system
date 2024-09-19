@@ -155,10 +155,37 @@ def add_final_calculations(temp_dict):
     return temp_dict
 
 
+# def calculate_ranks(students_data):
+#     # Step 1: Create a list of tuples (student_name, obtained_marks) from the data
+#     student_marks_list = [(student_name, data['grand_total']['obtained_marks']) 
+#                           for student_name, data in students_data.items()]
+
+#     # Step 2: Sort the students based on obtained_marks in descending order
+#     sorted_students = sorted(student_marks_list, key=lambda x: x[1], reverse=True)
+
+#     # Step 3: Assign ranks
+#     rank = 1
+#     for index, (student_name, obtained_marks) in enumerate(sorted_students):
+#         # If current student has the same marks as the previous one, assign the same rank
+#         if index > 0 and obtained_marks == sorted_students[index - 1][1]:
+#             students_data[student_name]['grand_total']['rank'] = students_data[sorted_students[index - 1][0]]['grand_total']['rank']
+#         else:
+#             students_data[student_name]['grand_total']['rank'] = rank
+        
+#         # Increment rank for the next student
+#         rank += 1
+
+#     return students_data
+
+
 def calculate_ranks(students_data):
     # Step 1: Create a list of tuples (student_name, obtained_marks) from the data
-    student_marks_list = [(student_name, data['grand_total']['obtained_marks']) 
-                          for student_name, data in students_data.items()]
+    # but only include students who have not failed (fail == False)
+    student_marks_list = [
+        (student_name, data['grand_total']['obtained_marks']) 
+        for student_name, data in students_data.items()
+        if not data['grand_total'].get('fail', False)  # Skip if 'fail' is True
+    ]
 
     # Step 2: Sort the students based on obtained_marks in descending order
     sorted_students = sorted(student_marks_list, key=lambda x: x[1], reverse=True)
@@ -166,7 +193,7 @@ def calculate_ranks(students_data):
     # Step 3: Assign ranks
     rank = 1
     for index, (student_name, obtained_marks) in enumerate(sorted_students):
-        # If current student has the same marks as the previous one, assign the same rank
+        # If the current student has the same marks as the previous one, assign the same rank
         if index > 0 and obtained_marks == sorted_students[index - 1][1]:
             students_data[student_name]['grand_total']['rank'] = students_data[sorted_students[index - 1][0]]['grand_total']['rank']
         else:
@@ -174,6 +201,11 @@ def calculate_ranks(students_data):
         
         # Increment rank for the next student
         rank += 1
+
+    # Optional: Set rank as None or 'N/A' for failed students
+    for student_name, data in students_data.items():
+        if data['grand_total'].get('fail', False):
+            students_data[student_name]['grand_total']['rank'] = 'N/A'  # You can set this to whatever is appropriate
 
     return students_data
 
