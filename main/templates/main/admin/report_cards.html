@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <html>
   <head>
     <style>
@@ -160,214 +161,206 @@
       <button onclick="window.print()">Print</button>
     </div>
     <div class="container">
-      {% for student_name, related_data in students_marks.items %}
-        <div class="report-card">
-          <div class="text-center report-header">
-            <div class="school-logo">
-              <img src="{% static 'main/images/school_logo.jpg' %}" alt="not found" />
+      {% if students_data %}
+        {% for student_name, related_data in students_data.items %}
+          <div class="report-card">
+            <div class="text-center report-header">
+              <div class="school-logo">
+                <img src="{% static 'main/images/school_logo.jpg' %}" alt="not found" />
+              </div>
+              <h2 class="text-uppercase school-name">Janaki Secondary Boarding School</h2>
+              <div class="address">Biratnagar-11, Morang | Contact no.: 021-570548</div>
+              <div class="recognition">(Recognized by the Government of Nepal)</div>
+              <div class="examination">First Term Report Card - 2081 B.S.</div>
             </div>
-            <h2 class="text-uppercase school-name">Janaki Secondary Boarding School</h2>
-            <div class="address">Biratnagar-11, Morang | Contact no.: 021-570548</div>
-            <div class="recognition">(Recognized by the Government of Nepal)</div>
-            <div class="examination">First Term Report Card - 2081 B.S.</div>
-          </div>
-          <div class="student-details">
-            <span>Name : {{ student_name }}</span>
-            <span>Class : {{ related_data.student_object.grade.name }}</span>
-            <span>Sec : -</span>
-            <span>Roll No. : {{ related_data.student_object.roll_no }}</span>
-          </div>
+            <div class="student-details">
+              <span>Name : {{ student_name|title }}</span>
+              <span>Class : {{ related_data.student_obj.grade.name }}</span>
+              <span>Sec : -</span>
+              <span>Roll No. : {{ related_data.student_obj.roll_no }}</span>
+            </div>
 
-          <!-- - Report Card table -->
-          <table>
-            <thead>
-              <tr>
-                <th rowspan="2">Subject</th>
-                <th colspan="2">Full Marks</th>
-                <th colspan="2">Pass Marks</th>
-                <th colspan="2">Marks Obtained</th>
-                <th rowspan="2">Final Grade</th>
-                <th rowspan="2">Grade Point</th>
-                <th rowspan="2">Remarks</th>
-              </tr>
-              <tr>
-                <th>PR</th>
-                <th>TH</th>
-                <th>PR</th>
-                <th>TH</th>
-                <th>PR</th>
-                <th>TH</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {% for subject, marks in related_data.marks.items %}
+            <!-- - Report Card table -->
+            <table>
+              <thead>
                 <tr>
-                  <td class="text-align-left">{{ subject }}</td>
-                  <td>
-                    {% if marks.total_marks.practical_full_marks == 0 %}
-                      -
-                    {% else %}
-                      {{ marks.total_marks.practical_full_marks }}
-                    {% endif %}
-                  </td>
-                  <td>{{ marks.total_marks.theory_full_marks }}</td>
-                  <td>
-                    {% if marks.total_marks.practical_pass_marks == 0 %}
-                      -
-                    {% else %}
-                      {{ marks.total_marks.practical_pass_marks }}
-                    {% endif %}
-                  </td>
-                  <td>{{ marks.total_marks.theory_pass_marks }}</td>
-                  <td>
-                    {% if marks.total_marks.practical_full_marks == 0 and marks.total_marks.practical_pass_marks == 0 %}
-                      -
-                    {% else %}
-                      {{ marks.obtained_marks.practical_marks }}
-                    {% endif %}
-                  </td>
-                  <td>{{ marks.obtained_marks.theory_marks }}</td>
-                  <td>
-                    {% if marks.obtained_marks.final_grade == 'D' %}
-                      D*
-                    {% else %}
-                      {{ marks.obtained_marks.final_grade }}
-                    {% endif %}
-                  </td>
-                  <td>
-                    {% if marks.obtained_marks.grade_points == 0 %}
-                      0.0*
-                    {% else %}
-                      {{ marks.obtained_marks.grade_points }}
-                    {% endif %}
-                  </td>
-                  <td>{{ marks.obtained_marks.remarks }}</td>
+                  <th rowspan="2">Subject</th>
+                  <th colspan="2">Full Marks</th>
+                  <th colspan="2">Pass Marks</th>
+                  <th colspan="2">Marks Obtained</th>
+                  <th rowspan="2">Final Grade</th>
+                  <th rowspan="2">Grade Point</th>
+                  <th rowspan="2">Remarks</th>
                 </tr>
-              {% endfor %}
+                <tr>
+                  <th>PR</th>
+                  <th>TH</th>
+                  <th>PR</th>
+                  <th>TH</th>
+                  <th>PR</th>
+                  <th>TH</th>
+                </tr>
+              </thead>
 
-              <tr>
-                <td class="text-align-left">Grand Total</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td colspan="2">{{ related_data.total_obtained_marks }}</td>
+              <tbody>
+                {% for subject, marks in related_data.marks.items %}
+                  <tr>
+                    <td class="text-align-left">{{ subject }}</td>
+                    <td>
+                      {% if marks.total_marks.practical.full == 0 %}
+                        -
+                      {% else %}
+                        {{ marks.total_marks.practical.full }}
+                      {% endif %}
+                    </td>
+                    <td>{{ marks.total_marks.theory.full }}</td>
+                    <td>
+                      {% if marks.total_marks.practical.pass == 0 %}
+                        -
+                      {% else %}
+                        {{ marks.total_marks.practical.pass }}
+                      {% endif %}
+                    </td>
+                    <td>{{ marks.total_marks.theory.pass }}</td>
+                    <td>
+                      {% if marks.total_marks.practical.full == 0 and marks.total_marks.practical.pass == 0 %}
+                        -
+                      {% else %}
+                        {{ marks.obtained_marks.practical_marks }}
+                      {% endif %}
+                    </td>
+                    <td>{{ marks.obtained_marks.theory_marks }}</td>
+                    <td>{{ marks.obtained_marks.subject_grade }}</td>
+                    <td>{{ marks.obtained_marks.subject_grade_point }}</td>
+                    <td>{{ marks.obtained_marks.subject_remarks }}</td>
+                  </tr>
+                {% endfor %}
 
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
-              <tr>
-                <td colspan="10">Grade Point Average &nbsp; : &nbsp; yet to configure</td>
-                {% comment %} <td colspan="10">Grade Point Average &nbsp; : &nbsp; {{ related_data.gpa|floatformat:1 }}</td> {% endcomment %}
-              </tr>
-              <tr>
-                <td colspan="10" class="inner-head">Result Summary</td>
-              </tr>
-              <tr>
-                <td colspan="3">GPA</td>
-                <td colspan="3">Grade</td>
-                <td colspan="2">Percentage</td>
-                <td colspan="2">Rank</td>
-              </tr>
-              <tr>
-                <td colspan="3">{{ related_data.gpa|floatformat:1 }}</td>
-                <td colspan="3">yet to configure</td>
-                <td colspan="2">{{ related_data.total_percentage|floatformat:1 }} %</td>
-                <td colspan="2">First</td>
-              </tr>
-              <tr>
-                <td colspan="10" class="inner-head">Profile Report</td>
-              </tr>
-              <tr>
-                <td colspan="2">Discipline</td>
-                <td colspan="2">Hygiene</td>
-                <td colspan="2">Conversation</td>
-                <td colspan="2">Reading</td>
-                <td>Writing</td>
-                <td colspan="2">Regularity</td>
-              </tr>
-              <tr>
-                <td colspan="2">Excellent</td>
-                <td colspan="2">Excellent</td>
-                <td colspan="2">Excellent</td>
-                <td colspan="2">Outstanding</td>
-                <td>Excellent</td>
-                <td colspan="2">Better</td>
-              </tr>
-              <tr>
-                <td colspan="5" class="text-align-left">Examination Held From &nbsp; : &nbsp; Baisakh 1 - Baisakh 20</td>
-                <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
-              </tr>
-              <tr>
-                <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp; {{ related_data.final_remarks }}</td>
-              </tr>
-              <tr>
-                <td colspan="10" class="inner-head">Details of Grade Sheet</td>
-              </tr>
-              <tr>
-                <td class="text-align-left">Percentage</td>
-                <td colspan="2">>90%</td>
-                <td>>80%</td>
-                <td colspan="2">>70%</td>
-                <td>>60%</td>
-                <td>>50%</td>
-                <td>>=40%</td>
-                <td>&lt;40%</td>
-              </tr>
-              <tr>
-                <td class="text-align-left">Grade</td>
-                <td colspan="2">A+</td>
-                <td>A</td>
-                <td colspan="2">B+</td>
-                <td>B</td>
-                <td>C+</td>
-                <td>C</td>
-                <td>D</td>
-              </tr>
-              <tr>
-                <td class="text-align-left">Grade Points</td>
-                <td colspan="2">4</td>
-                <td>3.6</td>
-                <td colspan="2">3.2</td>
-                <td>2.8</td>
-                <td>2.4</td>
-                <td>2</td>
-                <td>NG</td>
-              </tr>
-              <tr>
-                <td class="text-align-left">Remarks</td>
-                <td colspan="2">Outstanding</td>
-                <td>Excellent</td>
-                <td colspan="2">Very Good</td>
-                <td>Good</td>
-                <td>Satisfactory</td>
-                <td>Acceptable</td>
-                <td>Insufficient</td>
-              </tr>
-            </tbody>
-            <!-- Add more rows as needed -->
-          </table>
-          <div class="report-footer">
-            <div class="teacher-sign">
-              <p>&nbsp; &nbsp; Teacher Sign &nbsp; &nbsp;</p>
-            </div>
-            <div class="school-seal">
-              <div class="school-seal-img">
-                <img src="{% static 'main/images/school_seal.jpg' %}" alt="not found" />
+                <tr>
+                  <td class="text-align-left">Grand Total</td>
+                  <td>{{ related_data.grand_total.practical_full_marks }}</td>
+                  <td>{{ related_data.grand_total.theory_full_marks }}</td>
+                  <td>{{ related_data.grand_total.practical_pass_marks }}</td>
+                  <td>{{ related_data.grand_total.theory_pass_marks }}</td>
+                  <td colspan="2">{{ related_data.grand_total.obtained_marks }}</td>
+
+                  <td>{{ related_data.grand_total.final_grade }}</td>
+                  <td>{{ related_data.grand_total.final_grade_point }}</td>
+                  <td>{{ related_data.grand_total.remarks }}</td>
+                </tr>
+                <tr>
+                  <td colspan="10">Grade Point Average &nbsp; : &nbsp; {{ related_data.grand_total.final_grade }}</td>
+                  {% comment %} <td colspan="10">Grade Point Average &nbsp; : &nbsp; {{ related_data.gpa|floatformat:1 }}</td> {% endcomment %}
+                </tr>
+                <tr>
+                  <td colspan="10" class="inner-head">Result Summary</td>
+                </tr>
+                <tr>
+                  <td colspan="3">GPA</td>
+                  <td colspan="3">Grade</td>
+                  <td colspan="2">Percentage</td>
+                  <td colspan="2">Rank</td>
+                </tr>
+                <tr>
+                  <td colspan="3">{{ related_data.grand_total.final_grade_point }}</td>
+                  <td colspan="3">{{ related_data.grand_total.final_grade }}</td>
+                  <td colspan="2">{{ related_data.grand_total.percentage }} %</td>
+                  <td colspan="2">{{ related_data.grand_total.rank|ordinal }}</td>
+                </tr>
+                <tr>
+                  <td colspan="10" class="inner-head">Profile Report</td>
+                </tr>
+                <tr>
+                  <td colspan="2">Discipline</td>
+                  <td colspan="2">Hygiene</td>
+                  <td colspan="2">Conversation</td>
+                  <td colspan="2">Reading</td>
+                  <td>Writing</td>
+                  <td colspan="2">Regularity</td>
+                </tr>
+                <tr>
+                  <td colspan="2">Excellent</td>
+                  <td colspan="2">Excellent</td>
+                  <td colspan="2">Excellent</td>
+                  <td colspan="2">Outstanding</td>
+                  <td>Excellent</td>
+                  <td colspan="2">Better</td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-align-left">Examination Held From &nbsp; : &nbsp; Baisakh 1 - Baisakh 20</td>
+                  <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
+                </tr>
+                <tr>
+                  <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp; {{ related_data.grand_total.remarks }}</td>
+                </tr>
+                <tr>
+                  <td colspan="10" class="inner-head">Details of Grade Sheet</td>
+                </tr>
+                <tr>
+                  <td class="text-align-left">Percentage</td>
+                  <td colspan="2">>90%</td>
+                  <td>>80%</td>
+                  <td colspan="2">>70%</td>
+                  <td>>60%</td>
+                  <td>>50%</td>
+                  <td>>=40%</td>
+                  <td>&lt;40%</td>
+                </tr>
+                <tr>
+                  <td class="text-align-left">Grade</td>
+                  <td colspan="2">A+</td>
+                  <td>A</td>
+                  <td colspan="2">B+</td>
+                  <td>B</td>
+                  <td>C+</td>
+                  <td>C</td>
+                  <td>D</td>
+                </tr>
+                <tr>
+                  <td class="text-align-left">Grade Points</td>
+                  <td colspan="2">4</td>
+                  <td>3.6</td>
+                  <td colspan="2">3.2</td>
+                  <td>2.8</td>
+                  <td>2.4</td>
+                  <td>2</td>
+                  <td>NG</td>
+                </tr>
+                <tr>
+                  <td class="text-align-left">Remarks</td>
+                  <td colspan="2">Outstanding</td>
+                  <td>Excellent</td>
+                  <td colspan="2">Very Good</td>
+                  <td>Good</td>
+                  <td>Satisfactory</td>
+                  <td>Acceptable</td>
+                  <td>Insufficient</td>
+                </tr>
+              </tbody>
+              <!-- Add more rows as needed -->
+            </table>
+            <div class="report-footer">
+              <div class="teacher-sign">
+                <p>&nbsp; &nbsp; Teacher Sign &nbsp; &nbsp;</p>
               </div>
-              <p>&nbsp; &nbsp;School Seal&nbsp; &nbsp;</p>
-            </div>
-            <div class="principal-sign">
-              <div class="principal-sign-img">
-                <img src="{% static 'main/images/principal_sign.png' %}" alt="not found" />
+              <div class="school-seal">
+                <div class="school-seal-img">
+                  <img src="{% static 'main/images/school_seal.jpg' %}" alt="not found" />
+                </div>
+                <p>&nbsp; &nbsp;School Seal&nbsp; &nbsp;</p>
               </div>
-              <p>&nbsp; &nbsp;Principal Sign&nbsp; &nbsp;</p>
+              <div class="principal-sign">
+                <div class="principal-sign-img">
+                  <img src="{% static 'main/images/principal_sign.png' %}" alt="not found" />
+                </div>
+                <p>&nbsp; &nbsp;Principal Sign&nbsp; &nbsp;</p>
+              </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        No data
+      {% endif %}
     </div>
   </body>
 

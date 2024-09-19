@@ -70,141 +70,162 @@ def get_students_marks_for_grade(grade):
 
 
 
-
-# def students_marks_describe(student_wise_subject_marks):
-#     # Grade rules and mapping
-#     grade_mapping = [
-#         (90, 'A+', 4.0, 'Outstanding'),
-#         (80, 'A', 3.6, 'Excellent'),
-#         (70, 'B+', 3.2, 'Very Good'),
-#         (60, 'B', 2.8, 'Good'),
-#         (50, 'C+', 2.4, 'Satisfactory'),
-#         (40, 'C', 2.0, 'Acceptable'),
-#         (0, 'D', 0.0, 'Insufficient')  # NG for marks below 40
-#     ]
     
-#     def get_grade(percentage):
-#         for threshold, grade, points, remarks in grade_mapping:
-#             if percentage >= threshold:
-#                 return grade, points, remarks
-#         return 'D', 0.0, 'Insufficient'  # Default for marks < 40
-    
-#     # Loop through each student
-#     for student_name, student_data in student_wise_subject_marks.items():
-#         total_obtained_marks = 0
-#         total_full_marks = 0
-#         total_grade_points = 0
-#         subject_count = 0
-        
-#         # Process each subject for the student
-#         for subject, subject_data in student_data['marks'].items():
-#             theory_marks = subject_data['obtained_marks']['theory_marks']
-#             practical_marks = subject_data['obtained_marks']['practical_marks']
-            
-#             # Calculate total obtained marks for the subject
-#             total_subject_marks = theory_marks + practical_marks
-#             subject_data['obtained_marks']['total_marks_obtained'] = total_subject_marks
-            
-#             # Calculate the full marks for the subject
-#             theory_full_marks = subject_data['total_marks']['theory_full_marks']
-#             practical_full_marks = subject_data['total_marks']['practical_full_marks']
-#             full_subject_marks = theory_full_marks + practical_full_marks
-            
-#             # Calculate percentage for the subject
-#             percentage = (total_subject_marks / full_subject_marks) * 100
-            
-#             # Get final grade and grade points based on percentage
-#             final_grade, grade_points, remarks = get_grade(percentage)
-#             subject_data['obtained_marks']['final_grade'] = final_grade
-#             subject_data['obtained_marks']['grade_points'] = grade_points
-#             subject_data['obtained_marks']['remarks'] = remarks
-            
-#             # Accumulate the totals
-#             total_obtained_marks += total_subject_marks
-#             total_full_marks += full_subject_marks
-#             total_grade_points += grade_points
-#             subject_count += 1
-        
-#         # Calculate overall percentage and GPA for the student
-#         total_percentage = (total_obtained_marks / total_full_marks) * 100 if total_full_marks > 0 else 0
-#         gpa = total_grade_points / subject_count if subject_count > 0 else 0
-        
-#         # Append total percentage, GPA, and grade points to the student data
-#         student_data['total_percentage'] = total_percentage
-#         student_data['gpa'] = gpa
-#         student_data['total_grade_points'] = total_grade_points
-    
-#     # Return the updated dictionary
-#     return student_wise_subject_marks
 
 
 
 
-def students_marks_describe(student_wise_subject_marks):
-    # Grade rules and mapping
-    grade_mapping = [
-        (90, 'A+', 4.0, 'Outstanding'),
-        (80, 'A', 3.6, 'Excellent'),
-        (70, 'B+', 3.2, 'Very Good'),
-        (60, 'B', 2.8, 'Good'),
-        (50, 'C+', 2.4, 'Satisfactory'),
-        (40, 'C', 2.0, 'Acceptable'),
-        (0, 'D', 0.0, 'Insufficient')  # NG for marks below 40
-    ]
-    
-    def get_grade(percentage):
-        for threshold, grade, points, remarks in grade_mapping:
-            if percentage >= threshold:
-                return grade, points, remarks
-        return 'D', 0.0, 'Insufficient'  # Default for marks < 40
-    
-    # Loop through each student
-    for student_name, student_data in student_wise_subject_marks.items():
-        total_obtained_marks = 0
-        total_full_marks = 0
-        total_grade_points = 0
-        subject_count = 0
+
+# Grade rules and mapping
+GRADE_MAPPING = [
+    (90, 'A+', 4.0, 'Outstanding'),
+    (80, 'A', 3.6, 'Excellent'),
+    (70, 'B+', 3.2, 'Very Good'),
+    (60, 'B', 2.8, 'Good'),
+    (50, 'C+', 2.4, 'Satisfactory'),
+    (40, 'C', 2.0, 'Acceptable'),
+    (0, 'D', 'NG', 'Insufficient')  # NG for marks below 40
+]
+
+
+def get_grade(percentage):
+    for grade_rule in GRADE_MAPPING:
+            if percentage > grade_rule[0]:
+                return grade_rule[1]
+
+
+def get_grade_point(percentage):
+    for grade_rule in GRADE_MAPPING:
+        if percentage > grade_rule[0]:
+            return grade_rule[2]
         
-        # Process each subject for the student
-        for subject, subject_data in student_data['marks'].items():
-            theory_marks = subject_data['obtained_marks']['theory_marks']
-            practical_marks = subject_data['obtained_marks']['practical_marks']
+
+
+def get_remarks(percentage):
+    for grade_rule in GRADE_MAPPING:
+        if percentage > grade_rule[0]:
+            return grade_rule[3]
+
+
+
+
+def add_grand_total(temp_dict):
+
+    for student_name,student_related_data in temp_dict.items():
+        if 'grand_total' not in student_related_data.keys():
+            student_related_data['grand_total'] = {
+                'theory_full_marks': 0,
+                'practical_full_marks': 0,
+                'theory_pass_marks': 0,
+                'practical_pass_marks': 0,
+                'total_marks': 0,
+                'obtained_marks': 0,
+                'final_grade': '',
+                'final_grade_point': 0.0,
+                'remarks': '',
+                'percentage': 0.0,
+                'rank': '',
+            }
             
-            # Calculate total obtained marks for the subject
-            total_subject_marks = theory_marks + practical_marks
-            subject_data['obtained_marks']['total_marks_obtained'] = total_subject_marks  # This is still subject-wise
-            
-            # Calculate the full marks for the subject
-            theory_full_marks = subject_data['total_marks']['theory_full_marks']
-            practical_full_marks = subject_data['total_marks']['practical_full_marks']
-            full_subject_marks = theory_full_marks + practical_full_marks
-            
-            # Calculate percentage for the subject
-            percentage = (total_subject_marks / full_subject_marks) * 100
-            
-            # Get final grade and grade points based on percentage
-            final_grade, grade_points, remarks = get_grade(percentage)
-            subject_data['obtained_marks']['final_grade'] = final_grade
-            subject_data['obtained_marks']['grade_points'] = grade_points
-            subject_data['obtained_marks']['remarks'] = remarks
-            
-            # Accumulate the totals for overall marks and grades
-            total_obtained_marks += total_subject_marks
-            total_full_marks += full_subject_marks
-            total_grade_points += grade_points
-            subject_count += 1
+        for subject_name, subject_data in student_related_data['marks'].items():
+            student_related_data['grand_total']['theory_full_marks'] += subject_data['total_marks']['theory']['full']
+            student_related_data['grand_total']['practical_full_marks'] += subject_data['total_marks']['practical']['full']
+            student_related_data['grand_total']['theory_pass_marks'] += subject_data['total_marks']['theory']['pass']
+            student_related_data['grand_total']['practical_pass_marks'] += subject_data['total_marks']['practical']['pass']
+            student_related_data['grand_total']['total_marks'] += subject_data['total_marks']['theory']['full'] + subject_data['total_marks']['practical']['full']
+            student_related_data['grand_total']['obtained_marks'] += subject_data['obtained_marks']['theory_marks'] + subject_data['obtained_marks']['practical_marks']
+
+    return temp_dict
+
+
+
+def add_final_calculations(temp_dict):
+    for student_name, student_data in temp_dict.items():
+        total_percentage = (student_data['grand_total']['obtained_marks']/student_data['grand_total']['total_marks'])*100
+        student_data['grand_total']['percentage'] = round(total_percentage,1)
+        student_data['grand_total']['final_grade'] = get_grade(total_percentage)
+        student_data['grand_total']['final_grade_point'] = get_grade_point(total_percentage)
+        student_data['grand_total']['remarks'] = get_remarks(total_percentage)
         
-        # Calculate overall percentage and GPA for the student
-        total_percentage = (total_obtained_marks / total_full_marks) * 100 if total_full_marks > 0 else 0
-        gpa = total_grade_points / subject_count if subject_count > 0 else 0
+    return temp_dict
+
+
+def calculate_ranks(students_data):
+    # Step 1: Create a list of tuples (student_name, obtained_marks) from the data
+    student_marks_list = [(student_name, data['grand_total']['obtained_marks']) 
+                          for student_name, data in students_data.items()]
+
+    # Step 2: Sort the students based on obtained_marks in descending order
+    sorted_students = sorted(student_marks_list, key=lambda x: x[1], reverse=True)
+
+    # Step 3: Assign ranks
+    rank = 1
+    for index, (student_name, obtained_marks) in enumerate(sorted_students):
+        # If current student has the same marks as the previous one, assign the same rank
+        if index > 0 and obtained_marks == sorted_students[index - 1][1]:
+            students_data[student_name]['grand_total']['rank'] = students_data[sorted_students[index - 1][0]]['grand_total']['rank']
+        else:
+            students_data[student_name]['grand_total']['rank'] = rank
         
-        # Append total obtained marks, total percentage, GPA, and grade points to the student data
-        student_data['total_obtained_marks'] = total_obtained_marks
-        student_data['total_percentage'] = total_percentage
-        student_data['gpa'] = gpa
-        student_data['total_grade_points'] = total_grade_points
-        student_data['final_grade'] = get_grade(total_percentage)[0]
-        student_data['final_remarks'] = get_grade(total_percentage)[2]
+        # Increment rank for the next student
+        rank += 1
+
+    return students_data
+
+
+def get_reports(grade):
+    # Create a dictionary to store student marks
+    temp_dict = defaultdict(dict)
     
-    # Return the updated dictionary
-    return student_wise_subject_marks
+    # Filter MarksEntry by grade
+    marks_entries = MarksEntry.objects.filter(
+        student__grade=grade  # Filter by student grade
+    ).select_related('student', 'exam_paper__subject')
+    
+    # Loop through each mark entry and build the dictionary
+    for entry in marks_entries:
+        student_name = entry.student.name.lower()  # Making student name lowercase
+        student = entry.student
+        subject_name = entry.exam_paper.subject.name
+        obtained_th_marks = (entry.theory_marks or 0)
+        obtained_pr_marks = (entry.practical_marks or 0)
+        total_obtained_marks = entry.th_plus_pr_marks
+
+        # Ensure 'marks' key exists for the student
+        if 'marks' not in temp_dict[student_name]:
+            temp_dict[student_name]['marks'] = {}
+
+        # Assign subject marks data
+        temp_dict[student_name]['marks'][subject_name] = {
+            'total_marks': {
+                'theory':{
+                    'full': entry.exam_paper.theory_full_marks,
+                    'pass': entry.exam_paper.theory_pass_marks
+                },
+                'practical':{
+                    'full': entry.exam_paper.practical_full_marks,
+                    'pass': entry.exam_paper.practical_pass_marks
+                },
+                'total': entry.exam_paper.total_full_marks
+            },
+            'obtained_marks':{
+                'theory_marks': obtained_th_marks,
+                'practical_marks': obtained_pr_marks,
+                'total_marks_obtained': total_obtained_marks,
+                'subject_grade': entry.marks_grade,
+                'subject_grade_point': entry.marks_grade_point,
+                'subject_remarks': entry.marks_grade_remarks
+            },
+            
+        }
+
+        temp_dict[student_name]['student_obj'] = student
+
+
+    temp_dict = add_grand_total(temp_dict)
+    temp_dict = add_final_calculations(temp_dict)
+    temp_dict = calculate_ranks(temp_dict)
+
+    return temp_dict
+    
+

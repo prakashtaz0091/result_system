@@ -76,7 +76,7 @@ class ExamPaper(models.Model):
     
 
     @property
-    def total_marks(self):
+    def total_full_marks(self):
         return self.theory_full_marks + self.practical_full_marks
 
 
@@ -87,9 +87,58 @@ class MarksEntry(models.Model):
     theory_marks = models.IntegerField(null=True, blank=False)
     practical_marks = models.IntegerField(null=True, blank=False)
 
+
     class Meta:
         unique_together = ('exam_paper', 'student')
         verbose_name_plural = "Marks Entries"
 
     def __str__(self):
         return f"{self.student.name} - {self.exam_paper}"
+    
+
+    @property
+    def th_plus_pr_marks(self):
+        return self.theory_marks + self.practical_marks
+    
+
+    # Grade rules and mapping
+    grade_mapping = [
+        (90, 'A+', 4.0, 'Outstanding'),
+        (80, 'A', 3.6, 'Excellent'),
+        (70, 'B+', 3.2, 'Very Good'),
+        (60, 'B', 2.8, 'Good'),
+        (50, 'C+', 2.4, 'Satisfactory'),
+        (40, 'C', 2.0, 'Acceptable'),
+        (0, 'D', 'NG', 'Insufficient')  # NG for marks below 40
+    ]
+
+
+    @property
+    def subject_percentage(self):
+        return (self.th_plus_pr_marks / self.exam_paper.total_full_marks) * 100
+
+    @property
+    def marks_grade(self):
+        subject_percentage = self.subject_percentage
+
+        for grade_rule in self.grade_mapping:
+            if subject_percentage > grade_rule[0]:
+                return grade_rule[1]
+            
+    
+    @property
+    def marks_grade_point(self):
+        subject_percentage = self.subject_percentage
+
+        for grade_rule in self.grade_mapping:
+            if subject_percentage > grade_rule[0]:
+                return grade_rule[2]
+            
+
+    @property
+    def marks_grade_remarks(self):
+        subject_percentage = self.subject_percentage
+
+        for grade_rule in self.grade_mapping:
+            if subject_percentage > grade_rule[0]:
+                return grade_rule[3]
