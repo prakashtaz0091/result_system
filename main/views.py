@@ -11,6 +11,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .helpers import get_paper_student_marks,get_reports
 from django.views.decorators.http import require_http_methods, require_GET
+from django.db.models import Prefetch
+
 
 
 
@@ -381,6 +383,7 @@ def subjects_view(request):
 """
 marks entry
 """
+
 @login_required
 def marks_entry(request, pk):
     exam_paper = get_object_or_404(ExamPaper, pk=pk)
@@ -421,9 +424,8 @@ def marks_entry(request, pk):
 
 
 
-    exam_paper = get_object_or_404(ExamPaper, pk=pk)
 
-    #check if marks_entry already done, if done, then redirect to marks entry update page
+    # check if marks_entry already done, if done, then redirect to marks entry update page
     if exam_paper.marks_entries.exists():
         message = "You have already done marks entry for this exam paper. Below are the marks obtained by students."
         messages.success(request, message)
@@ -445,6 +447,7 @@ def marks_entry(request, pk):
     }
 
     return render(request, 'main/teacher/marks_entry.html', context)
+
 
 
 
@@ -509,7 +512,6 @@ def marks_entry_update(request, pk):
     }
 
     return render(request, 'main/teacher/marks_entry_update.html',context)
-
 
 
 

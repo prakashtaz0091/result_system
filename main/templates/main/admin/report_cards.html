@@ -16,8 +16,8 @@
         }
         .report-card {
           width: 48%; /* Two cards side by side with some space between */
-          margin: 1%;
-          border: 0.5px solid #000; /* Narrow border */
+          margin: 0 1%;
+          border: 1px solid #000; /* Narrow border */
           padding: 10px;
           box-sizing: border-box;
           page-break-inside: avoid;
@@ -245,26 +245,26 @@
                   <td colspan="2">{{ related_data.grand_total.obtained_marks }}</td>
 
                   <td>
-                    {% if related_data.grand_total.fail %}
+                    {% comment %} {% if related_data.grand_total.fail %}
                       Fail
                     {% else %}
                       {{ related_data.grand_total.final_grade }}
-                    {% endif %}
+                    {% endif %} {% endcomment %}-
                   </td>
 
                   <td>
-                    {% if related_data.grand_total.fail %}
+                    {% comment %} {% if related_data.grand_total.fail %}
                       Fail
                     {% else %}
                       {{ related_data.grand_total.final_grade_point }}
-                    {% endif %}
+                    {% endif %} {% endcomment %}-
                   </td>
                   <td>
-                    {% if related_data.grand_total.fail %}
+                    {% comment %} {% if related_data.grand_total.fail %}
                       Fail
                     {% else %}
                       {{ related_data.grand_total.remarks }}
-                    {% endif %}
+                    {% endif %} {% endcomment %}-
                   </td>
                 </tr>
                 <tr>
