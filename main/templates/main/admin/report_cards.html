@@ -7,6 +7,11 @@
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       }
       @media print {
+        .print,
+        .print button {
+          display: none;
+        }
+      
         .container {
           display: flex;
           flex-wrap: wrap;
@@ -81,7 +86,7 @@
         font-weight: 600;
       }
       .student-details {
-        font-size: 0.6rem;
+        font-size: 0.7rem;
         font-weight: 800;
         display: flex;
         justify-content: space-between;
@@ -176,7 +181,13 @@
             <div class="student-details">
               <span>Name : {{ student_name|title }}</span>
               <span>Class : {{ related_data.student_obj.grade.name }}</span>
-              <span>Sec : -</span>
+              <span>
+                Sec :{% if related_data.student_obj.grade.section != '-' %}
+                  {{ related_data.student_obj.grade.section }}
+                {% else %}
+                  -
+                {% endif %}
+              </span>
               <span>Roll No. : {{ related_data.student_obj.roll_no }}</span>
             </div>
 
@@ -270,7 +281,7 @@
                 <tr>
                   <td colspan="10">
                     Grade Point Average &nbsp; : &nbsp;{% if related_data.grand_total.fail %}
-                      Fail
+                      NG
                     {% else %}
                       {{ related_data.grand_total.final_grade }}
                     {% endif %}
@@ -289,21 +300,21 @@
                 <tr>
                   <td colspan="3">
                     {% if related_data.grand_total.fail %}
-                      Fail
+                      NG
                     {% else %}
                       {{ related_data.grand_total.final_grade_point }}
                     {% endif %}
                   </td>
                   <td colspan="3">
                     {% if related_data.grand_total.fail %}
-                      Fail
+                      NG
                     {% else %}
                       {{ related_data.grand_total.final_grade }}
                     {% endif %}
                   </td>
                   <td colspan="2">
                     {% if related_data.grand_total.fail %}
-                      Fail
+                      N/A
                     {% else %}
                       {{ related_data.grand_total.percentage }} %
                     {% endif %}
@@ -334,13 +345,8 @@
                   <td colspan="5" class="text-align-right">Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</td>
                 </tr>
                 <tr>
-                  <td colspan="10" class="text-align-left">
-                    Remarks &nbsp; : &nbsp;{% if related_data.grand_total.fail %}
-                      Fail
-                    {% else %}
-                      {{ related_data.grand_total.remarks }}
-                    {% endif %}
-                  </td>
+                  <td colspan="10" class="text-align-left">Remarks &nbsp; : &nbsp;
+                    {{ related_data.grand_total.remarks }}</td>
                 </tr>
                 <tr>
                   <td colspan="10" class="inner-head">Details of Grade Sheet</td>

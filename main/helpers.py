@@ -83,7 +83,7 @@ GRADE_MAPPING = [
     (70, 'B+', 3.2, 'Very Good'),
     (60, 'B', 2.8, 'Good'),
     (50, 'C+', 2.4, 'Satisfactory'),
-    (40, 'C', 2.0, 'Acceptable'),
+    (39, 'C', 2.0, 'Acceptable'),
     (0, 'D', 'NG', 'Insufficient')  # NG for marks below 40
 ]
 
@@ -106,6 +106,22 @@ def get_remarks(percentage):
         if percentage > grade_rule[0]:
             return grade_rule[3]
 
+
+
+FINAL_REMARKS = [
+    (90, 'Outstanding'),
+    (80, 'Excellent'),
+    (70, 'Very Good, impressive'),
+    (60, 'Good, go on getting yourself better'),
+    (50, 'Satisfactory, work harder you can chase it'),
+    (39, 'Acceptable, work harder'),
+    (0, 'Very Neglegence behaviour')  # NG for marks below 40
+]
+
+def get_final_remarks(percentage):
+    for remarks in FINAL_REMARKS:
+        if percentage > remarks[0]:
+            return remarks[1]
 
 
 
@@ -150,7 +166,12 @@ def add_final_calculations(temp_dict):
         student_data['grand_total']['percentage'] = round(total_percentage,1)
         student_data['grand_total']['final_grade'] = get_grade(total_percentage)
         student_data['grand_total']['final_grade_point'] = get_grade_point(total_percentage)
-        student_data['grand_total']['remarks'] = get_remarks(total_percentage)
+
+        if not student_data['grand_total']['fail']:
+            student_data['grand_total']['remarks'] = get_final_remarks(total_percentage)
+        else:
+            student_data['grand_total']['remarks'] = FINAL_REMARKS[-1][1]
+
         
     return temp_dict
 

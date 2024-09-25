@@ -46,7 +46,12 @@
         <select class="form-select" aria-label="Default select example" name="grade_id">
           <option value="">Grades</option>
           {% for grade in grades %}
-            <option value="{{ grade.id }}">{{ grade.name }}</option>
+            <option value="{{ grade.id }}">
+              {{ grade.name }}
+              {% if grade.section != '-' %}
+                - {{ grade.section }}
+              {% endif %}
+            </option>
           {% endfor %}
         </select>
         <button type="submit" class="btn btn-success btn-sm">Apply</button>
@@ -92,7 +97,13 @@
 
                 <td>{{ paper.exam }}</td>
                 <td>{{ paper.subject.name }}</td>
-                <td>{{ paper.subject.grade.name }}</td>
+                <td>
+                  {{ paper.subject.grade.name }}
+
+                  {% if paper.subject.grade.section != '-' %}
+                    - {{ paper.subject.grade.section }}
+                  {% endif %}
+                </td>
                 <td class="{% if paper.theory_full_marks == 0 %} text-warning {% endif %}">{{ paper.theory_full_marks }}</td>
                 <td class="{% if paper.practical_full_marks == 0 %} text-warning {% endif %}">{{ paper.practical_full_marks }}</td>
                 <td class="{% if paper.theory_pass_marks == 0 %} text-warning {% endif %}">{{ paper.theory_pass_marks }}</td>

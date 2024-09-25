@@ -64,7 +64,12 @@
     <div class="d-flex justify-content-center gap-5">
       {% if request.user.class_teacher %}
         <a href="{% url 'students' %}" class="card-button">
-          Grade {{ request.user.class_teacher }}<br />
+          Grade {{ request.user.class_teacher }}
+
+          {% if request.user.class_teacher.section != '-' %}
+            - section {{ request.user.class_teacher.section }}
+          {% endif %}
+          <br />
           Students
         </a>
       {% endif %}

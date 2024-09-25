@@ -26,9 +26,10 @@ class StudentForm(ModelForm):
 class GradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ['name', 'teacher']
+        fields = ['name','section','teacher']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'section': forms.TextInput(attrs={'class': 'form-control'}),
             'teacher': forms.Select(attrs={'class': 'form-control'}),
         }
 

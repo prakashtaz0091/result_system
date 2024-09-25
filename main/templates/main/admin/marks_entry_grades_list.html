@@ -38,7 +38,12 @@
   <div class="container mt-5">
     <div class="d-flex justify-content-center gap-5 flex-wrap">
       {% for grade in grades %}
-        <a href="{% url 'marks_entry_subjects_list_view' grade.id %}" class="card-button">Grade {{ grade.name }}</a>
+        <a href="{% url 'marks_entry_subjects_list_view' grade.id %}" class="card-button">
+          Grade {{ grade.name }}
+          {% if grade.section != '-' %}
+            - {{ grade.section }}
+          {% endif %}
+        </a>
       {% endfor %}
     </div>
   </div>

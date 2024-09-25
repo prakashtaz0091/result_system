@@ -50,7 +50,12 @@
           {% if grades %}
             {% for grade in grades %}
               <tr>
-                <th scope="row">{{ grade.name }}</th>
+                <th scope="row">
+                  {{ grade.name }}
+                  {% if grade.section != '-' %}
+                    - section {{ grade.section }}
+                  {% endif %}
+                </th>
                 <td>{{ grade.teacher.first_name|default:grade.teacher }} {{ grade.teacher.last_name|default:'' }}</td>
                 <td>
                   <div class="d-flex gap-1">

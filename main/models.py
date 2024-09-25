@@ -3,12 +3,21 @@ from django.contrib.auth.models import User
 
 
 class Grade(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
+    section = models.CharField(max_length=10, default="-")
     teacher = models.OneToOneField(User,verbose_name="Class Teacher", on_delete=models.CASCADE, related_name="class_teacher")
 
+    class Meta:
+        unique_together = ('name', 'section')
 
     def __str__(self):
-        return self.name
+        return self.name + " - " + self.section if self.section != "-" else self.name
+    
+
+    def full_name(self):
+        if self.section == "-":
+            return self.name
+        return f"{self.name} - {self.section}"
 
 
 
@@ -40,7 +49,7 @@ class Subject(models.Model):
         unique_together = ('name', 'grade')
 
     def __str__(self):
-        return f"{self.name} ---of---> {self.grade.name} ---is taught by---> {self.subject_teacher.username}"
+        return f"{self.grade.full_name()}'s {self.name}  ---subject teacher---> {self.subject_teacher.username}"
     
 
 
@@ -108,7 +117,7 @@ class MarksEntry(models.Model):
         (70, 'B+', 3.2, 'Very Good'),
         (60, 'B', 2.8, 'Good'),
         (50, 'C+', 2.4, 'Satisfactory'),
-        (40, 'C', 2.0, 'Acceptable'),
+        (39, 'C', 2.0, 'Acceptable'),
         (0, 'D', 'NG', 'Insufficient')  # NG for marks below 40
     ]
 
@@ -116,29 +125,43 @@ class MarksEntry(models.Model):
     @property
     def subject_percentage(self):
         return (self.th_plus_pr_marks / self.exam_paper.total_full_marks) * 100
+    
+
+    @property
+    def is_pass(self):
+        return self.theory_marks >= self.exam_paper.theory_pass_marks and self.practical_marks >= self.exam_paper.practical_pass_marks
 
     @property
     def marks_grade(self):
         subject_percentage = self.subject_percentage
-
-        for grade_rule in self.grade_mapping:
-            if subject_percentage > grade_rule[0]:
-                return grade_rule[1]
+        if self.is_pass:
+            for grade_rule in self.grade_mapping:
+                
+                if subject_percentage > grade_rule[0]:
+                    return grade_rule[1]
+        else:
+            return self.grade_mapping[6][1]
             
     
     @property
     def marks_grade_point(self):
         subject_percentage = self.subject_percentage
-
-        for grade_rule in self.grade_mapping:
-            if subject_percentage > grade_rule[0]:
-                return grade_rule[2]
+        if self.is_pass:
+            for grade_rule in self.grade_mapping:
+                
+                if subject_percentage > grade_rule[0]:
+                    return grade_rule[2]
+        else:
+            return self.grade_mapping[6][2]
             
 
     @property
     def marks_grade_remarks(self):
         subject_percentage = self.subject_percentage
-
-        for grade_rule in self.grade_mapping:
-            if subject_percentage > grade_rule[0]:
-                return grade_rule[3]
+        if self.is_pass:
+            for grade_rule in self.grade_mapping:
+                
+                if subject_percentage > grade_rule[0]:
+                    return grade_rule[3]
+        else:
+            return self.grade_mapping[6][3]

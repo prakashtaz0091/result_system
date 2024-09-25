@@ -37,7 +37,11 @@
         <select class="form-select" aria-label="Default select example" name="grade_id">
           <option value="">Grades</option>
           {% for grade in grades %}
-            <option value="{{ grade.id }}">{{ grade.name }}</option>
+            <option value="{{ grade.id }}">
+              {{ grade.name }} {% if grade.section != '-' %}
+                - {{ grade.section }}
+              {% endif %}
+            </option>
           {% endfor %}
         </select>
         <button type="submit" class="btn btn-success btn-sm">Apply</button>
@@ -64,7 +68,13 @@
               <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ subject.name }}</td>
-                <td>{{ subject.grade.name }}</td>
+                <td>
+                  {{ subject.grade.name }}
+
+                  {% if subject.grade.section != '-' %}
+                    - {{ subject.grade.section }}
+                  {% endif %}
+                </td>
                 <td>{{ subject.subject_teacher.first_name|default:subject.subject_teacher.username }}
                   {{ subject.subject_teacher.last_name|default:'' }}</td>
                 <td>
