@@ -575,8 +575,8 @@ def generate_report_cards_for_grade(request, grade_id):
     students_data = dict(get_reports(grade))
 
     # print(type(students_data))
-    for a,b in students_data.items():
-        pprint.pprint(b)
+    # for a,b in students_data.items():
+    #     pprint.pprint(b)
     context = {
         'students_data':students_data,
     }
