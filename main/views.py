@@ -539,7 +539,8 @@ def marks_entry_subjects_list_view(request, pk):
 
     context = {
         'grade': grade,
-        'exam_papers': ExamPaper.objects.filter(subject__grade = grade)
+        'exam_papers': ExamPaper.objects.filter(subject__grade = grade),
+        'exams': Exam.objects.all(),
     }
 
     return render(request, 'main/admin/marks_entry_subjects_list.html', context)
@@ -568,17 +569,20 @@ class MarksEntryListView(ListView):
 
 
 
-def generate_report_cards_for_grade(request, grade_id):
-    grade = get_object_or_404(Grade, pk=grade_id)
+# def generate_report_cards_for_grade(request, grade_id):
+def generate_report_cards_for_grade(request):
+    grade = get_object_or_404(Grade, pk=request.GET.get('grade_id'))
+    exam = get_object_or_404(Exam, pk=request.GET.get('exam_id'))
 
-    import pprint
-    students_data = dict(get_reports(grade))
+    students_data = dict(get_reports(grade, exam))
 
+    # import pprint
     # print(type(students_data))
     # for a,b in students_data.items():
     #     pprint.pprint(b)
     context = {
         'students_data':students_data,
+        'exam': exam
     }
     
     return render(request, 'main/admin/report_cards.html', context)

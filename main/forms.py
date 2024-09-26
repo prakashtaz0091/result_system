@@ -139,11 +139,13 @@ class SubjectForm(forms.ModelForm):
 
 class ExamForm(forms.ModelForm):
     year = forms.ChoiceField(label="Year", widget=forms.Select(attrs={'class': 'form-control'}))
+    start_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)'}))
+    end_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)'}))
 
 
     class Meta:
         model = Exam
-        fields = ['name', 'year']
+        fields = ['name', 'year', 'start_date', 'end_date']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
         }
@@ -151,8 +153,8 @@ class ExamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ExamForm, self).__init__(*args, **kwargs)
         current_year = datetime.now().year
-        start_year = current_year - 1
-        end_year = current_year + 10
+        start_year = current_year+57 - 1
+        end_year = current_year+57 + 10
         
         # Generate a list of choices for the year field
         years = [(year, year) for year in range(start_year, end_year + 1)]

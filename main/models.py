@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from .custom_model_fields import NepaliDateField
 
 class Grade(models.Model):
     name = models.CharField(max_length=50)
@@ -58,6 +58,8 @@ class Subject(models.Model):
 class Exam(models.Model):
     name = models.CharField(max_length=50)
     year = models.IntegerField()
+    start_date = NepaliDateField(blank=True, null=True)
+    end_date = NepaliDateField(blank=True, null=True)
 
     class Meta:
         unique_together = ('name', 'year')
@@ -65,6 +67,37 @@ class Exam(models.Model):
     def __str__(self):
         return f"{self.name} - {self.year}"
     
+    @classmethod
+    def get_readable_date(cls,date):
+        NEPALI_MONTH_MAPPING = {
+            '1':'Baisakh',
+            '2':'Jestha',
+            '3':'Ashadh',
+            '4':'Shrawan',
+            '5':'Bhadra',
+            '6':'Ashwin',
+            '7':'Kartik',
+            '8':'Mangsir',
+            '9':'Poush',
+            '10':'Magh',
+            '11':'Falgun',
+            '12':'Chaitra'
+
+        }
+        year, month_number, day = date.split('-')
+        month_number = month_number[1] if month_number[0] == '0' else month_number
+        return f"{NEPALI_MONTH_MAPPING[month_number]} {day}, {year}"
+
+
+    
+    @property
+    def readable_start_date(self):
+        return Exam.get_readable_date(self.start_date)
+    
+
+    @property
+    def readable_end_date(self):
+        return Exam.get_readable_date(self.start_date)
 
 
 

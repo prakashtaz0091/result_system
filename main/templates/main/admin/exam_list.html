@@ -41,7 +41,10 @@
         <thead>
           <tr>
             <th scope="col">Exam</th>
-            <th scope="col">Year (A.D)</th>
+            <th scope="col">Year (B.S.)</th>
+
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -51,7 +54,9 @@
             {% for exam in exams %}
               <tr>
                 <th scope="row">{{ exam.name }}</th>
-                <td>{{ exam.year }} A.D.</td>
+                <td>{{ exam.year }} (B.S.)</td>
+                <td>{{ exam.start_date }} (B.S.)</td>
+                <td>{{ exam.end_date }} (B.S.)</td>
                 <td>
                   <div class="d-flex gap-1">
                     <a href="{% url 'exams_update_view' exam.id %}" class="btn btn-success btn-sm">Edit</a>

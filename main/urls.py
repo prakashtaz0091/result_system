@@ -99,7 +99,8 @@ urlpatterns = [
 
 
                 #report card
-                path('report_cards/<int:grade_id>/', login_required(views.generate_report_cards_for_grade), name='generate_report_cards_for_grade_view')
+                # path('report_cards/<int:grade_id>/', login_required(views.generate_report_cards_for_grade), name='generate_report_cards_for_grade_view')
+                path('report_cards/', login_required(views.generate_report_cards_for_grade), name='generate_report_cards_for_grade_view')
             ]
         )
         

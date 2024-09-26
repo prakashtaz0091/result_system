@@ -180,7 +180,7 @@
               <h2 class="text-uppercase school-name">Janaki Secondary Boarding School</h2>
               <div class="address">Biratnagar-11, Morang | Contact no.: 021-570548</div>
               <div class="recognition">(Recognized by the Government of Nepal)</div>
-              <div class="examination">First Term Report Card - 2081 B.S.</div>
+              <div class="examination">{{ exam.name }} Report Card - {{ exam.year }} B.S.</div>
             </div>
             <div class="student-details">
               <span>Name : {{ student_name|title }}</span>
@@ -346,10 +346,10 @@
                 </tr>
                 <tr>
                   <td colspan="10">
-                    <div class="d-flex-justify-between">
-                      <div>Examination Held From &nbsp; : &nbsp; Baisakh 1 - Baisakh 20</div>
+                    <div class="d-flex-justify-between" style="font-size: 0.5rem;">
+                      <div>Examination Held From {{ exam.readable_start_date }} TO {{ exam.readable_end_date }}</div>
 
-                      <div>Issued Date &nbsp; : &nbsp; Baisakh 30, 2081</div>
+                      <div>Issued Date : Baisakh 30, 2081</div>
                     </div>
                   </td>
                 </tr>

@@ -109,13 +109,13 @@ def get_remarks(percentage):
 
 
 FINAL_REMARKS = [
-    (90, 'Outstanding'),
-    (80, 'Excellent'),
-    (70, 'Very Good, impressive'),
-    (60, 'Good, go on getting yourself better'),
-    (50, 'Satisfactory, work harder you can chase it'),
+    (90, 'Outstanding Keep it up.'),
+    (80, 'Excellent keep it up.'),
+    (70, 'Very Good labor more.'),
+    (60, 'Good hard labor will prove better result.'),
+    (50, 'Labor hard for better result.'),
     (39, 'Acceptable, work harder'),
-    (0, 'Very Neglegence behaviour')  # NG for marks below 40
+    (0, 'Very Poor, avoid negligence')  # NG for marks below 40
 ]
 
 def get_final_remarks(percentage):
@@ -231,13 +231,14 @@ def calculate_ranks(students_data):
     return students_data
 
 
-def get_reports(grade):
+def get_reports(grade, exam):
     # Create a dictionary to store student marks
     temp_dict = defaultdict(dict)
     
     # Filter MarksEntry by grade
     marks_entries = MarksEntry.objects.filter(
-        student__grade=grade  # Filter by student grade
+        student__grade=grade,
+        exam_paper__exam=exam  # Filter by student grade
     ).select_related('student', 'exam_paper__subject')
     
     # Loop through each mark entry and build the dictionary
