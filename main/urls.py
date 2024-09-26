@@ -26,6 +26,12 @@ urlpatterns = [
                 #marks_entry
                 path('marks_entry/<int:pk>/', views.marks_entry, name='marks_entry_view'),
                 path('marks_entry/update/<int:pk>/', views.marks_entry_update, name='marks_entry_update_view'),
+
+
+
+                #profile report
+                path('profile_report/', views.profile_report_view, name='profile_report_view'),
+                path('profile_report/entry/<int:exam_id>/', views.profile_report_entry_view, name='profile_report_entry_view'),
             ]
         )    
          

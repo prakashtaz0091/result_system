@@ -51,7 +51,7 @@
     </div>
     <div class="d-flex flex-column justify-content-center flex-wrap">
       {% for exam_paper in exam_papers %}
-        <a href="{% url 'marks_entries_view' exam_paper.id %}" class="card-button">
+        <a href="{% url 'marks_entries_view' exam_paper.id %}" class="card-button" style="justify-content: flex-start;">
           <small>{{ exam_paper.subject.subject_teacher.first_name }} {{ exam_paper.subject.subject_teacher.last_name }} | {{ exam_paper }}</small>
 
           {% if exam_paper.marks_entry_done %}

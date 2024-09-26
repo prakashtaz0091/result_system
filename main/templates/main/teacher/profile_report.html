@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 
 {% block title %}
-  Home
+  Profile Report
 {% endblock %}
 
 {% block extra_css %}
@@ -56,25 +56,13 @@
 {% endblock %}
 
 {% block main_content %}
-  <div class="container welcome-message">
-    <h1>Welcome, {{ user.username }}!</h1>
-    <p>Please submit the marks of students .</p>
-  </div>
   <div class="container mt-5">
-    <div class="d-flex justify-content-center gap-5">
-      {% if request.user.class_teacher %}
-        <a href="{% url 'students' %}" class="card-button">
-          Grade {{ request.user.class_teacher }}
+    <a href="{% url 'home' %}" class="btn btn-primary"><< Back</a>
 
-          {% if request.user.class_teacher.section != '-' %}
-            - section {{ request.user.class_teacher.section }}
-          {% endif %}
-          <br />
-          Students
-        </a>
-        <a href="{% url 'profile_report_view' %}" class="card-button">Profile Report</a>
-      {% endif %}
-      <a href="{% url 'teachers_subjects_view' %}" class="card-button">Marks Entry</a>
+    <div class="d-flex justify-content-center gap-5">
+      {% for exam in exams %}
+        <a href="{% url 'profile_report_entry_view' exam.id %}" class="card-button">{{ exam.name }}</a>
+      {% endfor %}
     </div>
   </div>
 {% endblock %}

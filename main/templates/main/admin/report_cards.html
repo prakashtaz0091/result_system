@@ -337,12 +337,21 @@
                   <td colspan="2">Regularity</td>
                 </tr>
                 <tr>
-                  <td colspan="2">Excellent</td>
-                  <td colspan="2">Excellent</td>
-                  <td colspan="2">Excellent</td>
-                  <td colspan="2">Outstanding</td>
-                  <td>Excellent</td>
-                  <td colspan="2">Better</td>
+                  {% if not related_data.profile_report %}
+                    <td colspan="2">N/A</td>
+                    <td colspan="2">N/A</td>
+                    <td colspan="2">N/A</td>
+                    <td colspan="2">N/A</td>
+                    <td>N/A</td>
+                    <td colspan="2">N/A</td>
+                  {% else %}
+                    <td colspan="2">{{ related_data.profile_report.discipline }}</td>
+                    <td colspan="2">{{ related_data.profile_report.hygiene }}</td>
+                    <td colspan="2">{{ related_data.profile_report.conversation }}</td>
+                    <td colspan="2">{{ related_data.profile_report.reading }}</td>
+                    <td>{{ related_data.profile_report.writing }}</td>
+                    <td colspan="2">{{ related_data.profile_report.regularity }}</td>
+                  {% endif %}
                 </tr>
                 <tr>
                   <td colspan="10">

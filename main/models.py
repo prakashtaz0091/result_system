@@ -198,3 +198,35 @@ class MarksEntry(models.Model):
                     return grade_rule[3]
         else:
             return self.grade_mapping[6][3]
+        
+
+
+
+class ProfileReport(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="profile_reports")
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="profile_reports")
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name="profile_reports")
+
+    report_choices = [
+        ('Outstanding', 'Outstanding'),
+        ('Excellent', 'Excellent'),
+        ('Very Good', 'Very Good'),
+        ('Good', 'Good'),
+        ('Satisfactory', 'Satisfactory'),
+        ('Acceptable', 'Acceptable'),
+        ('Insufficient', 'Insufficient'),
+    ]
+
+    discipline = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+    hygiene = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+    conversation = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+    reading = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+    writing = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+    regularity = models.CharField(max_length=50, choices=report_choices, default="Please edit this field")
+
+    class Meta:
+        unique_together = ('student', 'exam', 'grade')
+    
+
+    def __str__(self):
+        return f"{self.exam} - Grade {self.grade.name} - {self.student.name}"

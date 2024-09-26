@@ -114,7 +114,7 @@ FINAL_REMARKS = [
     (70, 'Very Good labor more.'),
     (60, 'Good hard labor will prove better result.'),
     (50, 'Labor hard for better result.'),
-    (39, 'Acceptable, work harder'),
+    (39, 'Labor hard for better result.'),
     (0, 'Very Poor, avoid negligence')  # NG for marks below 40
 ]
 
@@ -231,6 +231,18 @@ def calculate_ranks(students_data):
     return students_data
 
 
+
+
+from .models import ProfileReport
+def get_profile_report(student, exam):
+    profile_report = ProfileReport.objects.filter(student=student, exam=exam, grade = student.grade)
+
+    if not profile_report.exists():
+        return None
+    
+    return profile_report.first()
+
+
 def get_reports(grade, exam):
     # Create a dictionary to store student marks
     temp_dict = defaultdict(dict)
@@ -279,6 +291,7 @@ def get_reports(grade, exam):
         }
 
         temp_dict[student_name]['student_obj'] = student
+        temp_dict[student_name]['profile_report'] = get_profile_report(student, exam)
 
 
     temp_dict = add_grand_total(temp_dict)

@@ -1,0 +1,267 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Profile Report Entry
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .welcome-message {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .card-button {
+      text-decoration: none;
+      width: 200px;
+      height: 150px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .card-button:hover {
+      background-color: #007bff;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+      transform: translateY(-5px);
+      border-color: #007bff;
+    }
+    
+    .card-button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
+    }
+    
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+    @media (max-width: 576px) {
+      .table-wrapper {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container mt-5">
+    <a href="{% url 'profile_report_view' %}" class="btn btn-primary"><< Back</a>
+    <h5>
+      Profile Report Entry | Class {{ grade.name }} {% if grade.section != '-' %}
+        | {{ grade.section }}
+      {% endif %}| {{ exam.name }} Examination
+    </h5>
+    <div class="container">
+      <div class="table-wrapper">
+        <form action="" method="post">
+          <input type="hidden" name="grade_id" value="{{ grade.id }}" />
+          <input type="hidden" name="exam_id" value="{{ exam.id }}" />
+          <table class="table table-sm table-striped table-dark table-hover table-bordered caption-top mt-5 text-center">
+            <thead>
+              <tr>
+                <th class="align-middle">Roll No</th>
+                <th class="align-middle">Name</th>
+
+                <th class="align-middle">Discipline</th>
+                <th class="align-middle">Hygiene</th>
+                <th class="align-middle">Conversation</th>
+                <th class="align-middle">Reading</th>
+                <th class="align-middle">Writing</th>
+                <th class="align-middle">Regularity</th>
+              </tr>
+            </thead>
+            {% if profile_reports %}
+              <tbody>
+                {% csrf_token %}
+                {% for profile_report in profile_reports %}
+                  <tr>
+                    <td class="align-middle">{{ profile_report.student.roll_no }}</td>
+                    <td class="align-middle">{{ profile_report.student.name }}</td>
+
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-discipline" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.discipline == 'Outstanding' %} selected {% endif %} 
+                        >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.discipline == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.discipline == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.discipline == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.discipline == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.discipline == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.discipline == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-hygiene" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.hygiene == 'Outstanding' %} selected {% endif %} >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.hygiene == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.hygiene == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.hygiene == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.hygiene == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.hygiene == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.hygiene == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-conversation" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.conversation == 'Outstanding' %} selected {% endif %} >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.conversation == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.conversation == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.conversation == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.conversation == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.conversation == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.conversation == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-reading" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.reading == 'Outstanding' %} selected {% endif %} >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.reading == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.reading == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.reading == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.reading == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.reading == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.reading == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-writing" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.writing == 'Outstanding' %} selected {% endif %} >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.writing == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.writing == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.writing == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.writing == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.writing == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.writing == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                    <td class="align-middle">
+                      <select class="form-select" name="{{ profile_report.student.id }}-regularity" id="">
+                        <option value="Outstanding" 
+                        {% if profile_report.regularity == 'Outstanding' %} selected {% endif %} >Outstanding</option>
+                        <option value="Excellent"
+                        {% if profile_report.regularity == 'Excellent' %} selected {% endif %}
+                        >Excellent</option>
+                        <option value="Very Good"
+                        {% if profile_report.regularity == 'Very Good' %} selected {% endif %}
+                        >Very Good</option>
+                        <option value="Good"
+                        {% if profile_report.regularity == 'Good' %} selected {% endif %}
+                        >Good</option>
+                        <option value="Satisfactory"
+                        {% if profile_report.regularity == 'Satisfactory' %} selected {% endif %}
+                        >Satisfactory</option>
+                        <option value="Acceptable"
+                        {% if profile_report.regularity == 'Acceptable' %} selected {% endif %}
+                        >Acceptable</option>
+                        <option value="Insufficient"
+                        {% if profile_report.regularity == 'Insufficient' %} selected {% endif %}
+                        >Insufficient</option>
+                      </select>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            {% endif %}
+          </table>
+          <button class="btn btn-success w-100">Update Profile Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Student, Grade, Subject, Exam, ExamPaper, MarksEntry
+from .models import Student, Grade, Subject, Exam, ExamPaper, MarksEntry, ProfileReport
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.urls import reverse_lazy, reverse
@@ -576,8 +576,8 @@ def generate_report_cards_for_grade(request):
 
     students_data = dict(get_reports(grade, exam))
 
-    # import pprint
     # print(type(students_data))
+    # import pprint
     # for a,b in students_data.items():
     #     pprint.pprint(b)
     context = {
@@ -586,4 +586,90 @@ def generate_report_cards_for_grade(request):
     }
     
     return render(request, 'main/admin/report_cards.html', context)
+
+
+
+
+#profile report
+@login_required
+def profile_report_view(request):
+    context = {
+        'exams': Exam.objects.all()
+    }
+    return render(request, 'main/teacher/profile_report.html', context)
+
+
+
+
+@login_required
+def profile_report_entry_view(request, exam_id):
+
+    if request.method == 'POST':
+        exam_id = request.POST.get('exam_id')
+        exam = get_object_or_404(Exam, pk=exam_id)
+
+        grade_id = request.POST.get('grade_id')
+        this_teacher_class = get_object_or_404(Grade, pk=grade_id)
+
+
+        temp_dict = {}
+        # Loop through the POST items
+        for key, value in request.POST.items():
+            # Skip the non-relevant fields
+            if key not in ['grade_id', 'exam_id', 'csrfmiddlewaretoken']:
+                # Split the key into student_id and field_name
+                student_id, field_name = key.split('-')
+                
+                # Initialize a dictionary for each student_id if not already present
+                if student_id not in temp_dict:
+                    temp_dict[student_id] = {}
+                
+                # Add the field_name and value to the student's dictionary
+                temp_dict[student_id][field_name] = value
+
+
+
+        for student_id, report_details in temp_dict.items():
+            ProfileReport.objects.filter(
+                student__id=student_id,
+                exam=exam,
+                grade = this_teacher_class
+            ).update(**report_details)
+
+        return redirect('profile_report_entry_view', exam_id=exam_id)
+
+    else:
+        exam = get_object_or_404(Exam, pk=exam_id)
+        this_teacher_class = request.user.class_teacher
+
+        profile_reports = ProfileReport.objects.filter(exam=exam, grade = this_teacher_class).order_by('student__roll_no')
+        
+        if profile_reports.exists():
+            context = {
+                'grade':this_teacher_class,
+                'profile_reports': profile_reports,
+                'exam': exam
+            }
+            return render(request, 'main/teacher/profile_report_entry.html', context)
+        else:
+            students = Student.objects.filter(grade = this_teacher_class)
+            for student in students:
+                ProfileReport.objects.create(
+                    student = student,
+                    exam = exam,
+                    grade = this_teacher_class,
+                    
+                )
+
+            profile_reports = ProfileReport.objects.filter(exam=exam, grade = this_teacher_class).order_by('student__roll_no')
+
+            context = {
+                'exam': exam,
+                'grade':this_teacher_class,
+                'profile_reports': profile_reports
+            }
+
+            return render(request, 'main/teacher/profile_report_entry.html', context)
+
+
 
