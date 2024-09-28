@@ -102,7 +102,7 @@ The **Result Publishing System** is a Django-based web application designed to m
    python manage.py runserver
    ```
 
-7. **Access the application at http://127.0.0.1:8000/**:
+7. **Access the application at http://127.0.0.1:8000/teacher_pages and http://127.0.0.1:8000/admin_pages**:
 
 ## Usage
 
