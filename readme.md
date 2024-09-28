@@ -121,3 +121,7 @@ The **Result Publishing System** is a Django-based web application designed to m
   ```bash
        http://127.0.0.1:8000/admin_pages/
   ```
+
+## License
+
+- This project is licensed under the [Personal Use License / Non-commercial Use License](./LICENSE). See the LICENSE file for details.
