@@ -1,0 +1,187 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+  Import Export Students
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .wrapper {
+      margin-top: 20px;
+      font-size: 1rem;
+      max-width: 1000px;
+    }
+    .table-wrapper {
+      max-height: 80svh; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Sticky header to keep it fixed while scrolling */
+    thead th,
+    table > caption {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa; /* Light background for header */
+      z-index: 1;
+    }
+    .upload-box {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      text-align: center;
+      font-size: 16px;
+      color: #999;
+      cursor: pointer;
+      padding: 1.2rem;
+    }
+    
+    .upload-box.dragover {
+      border-color: #666;
+      background-color: #f0f0f0;
+    }
+    
+    .upload-box p {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .file-name {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+    .error-message {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container wrapper">
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <h5>Import Students Data</h5>
+
+    <div class="upload-box" id="drop-area">
+      <div id="placeholder">
+        <div>
+          <p>Drag & Drop your file here or click to select</p>
+          <p>Please provide an Excel file, file should look like this:</p>
+        </div>
+        <img src="{% static 'import_export/images/student_import_sample_file.png' %}" alt="not found" width="50%" />
+      </div>
+
+      <div class="file-name" id="file-name-display"></div>
+      <div class="error-message" id="error-message"></div>
+    </div>
+
+    <form action="{% url 'import_students_view' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="file" name="excel_file" id="fileInput" accept=".xlsx" style="display:none;" required />
+      <input type="submit" class="btn btn-success btn-sm my-2" id="upload-button" value="Upload File" />
+    </form>
+
+    <div class="table-wrapper">
+      <table class="table table-striped table-dark table-hover table-bordered caption-top mt-5">
+        <caption>Students list</caption>
+        <thead>
+          <tr>
+            <th scope="col">Class</th>
+            <th scope="col">Roll No</th>
+            <th scope="col">Name</th>
+          </tr>
+        </thead>
+
+        {% if students %}
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <th scope="row">{{ student.grade }}</th>
+                <th scope="row">{{ student.roll_no }}</th>
+                <td>{{ student.name }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        {% else %}
+          No students
+        {% endif %}
+      </table>
+    </div>
+
+    <script>
+      const dropArea = document.getElementById('drop-area')
+      const fileInput = document.getElementById('fileInput')
+      const fileNameDisplay = document.getElementById('file-name-display')
+      const placeholder = document.getElementById('placeholder')
+      const errorMessage = document.getElementById('error-message')
+      
+      // Prevent default behavior for drag and drop events
+      ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+        dropArea.addEventListener(eventName, preventDefaults, false)
+      })
+      
+      function preventDefaults(e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+      
+      // Highlight the drop area when file is dragged over it
+      ;['dragenter', 'dragover'].forEach((eventName) => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false)
+      })
+      ;['dragleave', 'drop'].forEach((eventName) => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false)
+      })
+      
+      // Handle drop event
+      dropArea.addEventListener('drop', handleDrop, false)
+      
+      function handleDrop(e) {
+        const files = e.dataTransfer.files
+        handleFiles(files)
+      }
+      
+      // Handle files when dropped or selected
+      function handleFiles(files) {
+        if (files.length > 0) {
+          //hide placeholder content
+          placeholder.style.display = 'none'
+      
+          const fileName = files[0].name // Get the name of the first file
+      
+          // Validate file extension
+          if (!fileName.endsWith('.xlsx')) {
+            errorMessage.textContent = 'Please upload a valid .xlsx file.'
+            fileNameDisplay.textContent = '' // Clear the previous file name
+            fileInput.value = '' // Clear the input
+            return
+          }
+      
+          errorMessage.textContent = '' // Clear any previous error messages
+          fileNameDisplay.textContent = `File selected: ${fileName}` // Display file name
+          fileInput.files = files // Set the files to the hidden input
+        }
+      }
+      
+      // When clicking the upload box, trigger the hidden file input
+      dropArea.addEventListener('click', () => fileInput.click())
+      
+      // Handle file selection through file input
+      fileInput.addEventListener('change', (e) => {
+        const files = e.target.files
+        handleFiles(files)
+      })
+    </script>
+  </div>
+{% endblock %}

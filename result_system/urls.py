@@ -26,6 +26,6 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 
     #import export
-    path('import_export/', include('import_export.urls')),
+    path('ie/', include('import_export.urls')),
 
 ]

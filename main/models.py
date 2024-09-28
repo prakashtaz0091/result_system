@@ -5,13 +5,13 @@ from .custom_model_fields import NepaliDateField
 class Grade(models.Model):
     name = models.CharField(max_length=50)
     section = models.CharField(max_length=10, default="-")
-    teacher = models.OneToOneField(User,verbose_name="Class Teacher", on_delete=models.CASCADE, related_name="class_teacher")
+    teacher = models.OneToOneField(User,verbose_name="Class Teacher", on_delete=models.CASCADE, related_name="class_teacher", null=True)
 
     class Meta:
         unique_together = ('name', 'section')
 
     def __str__(self):
-        return self.name + " - " + self.section if self.section != "-" else self.name
+        return self.name + " - " + self.section if self.section != "" else self.name
     
 
     def full_name(self):
@@ -34,7 +34,7 @@ class Student(models.Model):
         unique_together = ('name', 'roll_no', 'grade')
 
     def __str__(self):
-        return self.name
+        return self.grade.name + " - " + self.grade.section if self.grade.section != '-' else '' + " - " + self.name
     
 
 
@@ -42,7 +42,7 @@ class Student(models.Model):
 class Subject(models.Model):
     name = models.CharField(max_length=50, verbose_name="Subject Name")
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name="subjects")
-    subject_teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teaches")
+    subject_teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teaches", null=True)
 
 
     class Meta:
