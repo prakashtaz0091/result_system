@@ -89,12 +89,18 @@
     <form action="{% url 'import_students_view' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <input type="file" name="excel_file" id="fileInput" accept=".xlsx" style="display:none;" required />
-      <input type="submit" class="btn btn-success btn-sm my-2" id="upload-button" value="Upload File" />
+      <button class="btn btn-success btn-sm my-2" id="upload-button"><i class="bi bi-upload"></i> Upload File</button>
     </form>
 
     <div class="table-wrapper">
-      <table class="table table-striped table-dark table-hover table-bordered caption-top mt-5">
-        <caption>Students list</caption>
+      <div class="container d-flex justify-content-between mt-3">
+        <h5>Students List</h5>
+        <a href="{% url 'export_student_data_to_excel_view' %}" class="btn btn-success btn-sm">
+          <i class="bi bi-download"></i>
+          Download Student Data
+        </a>
+      </div>
+      <table class="table table-striped table-dark table-hover table-bordered caption-top mt-1">
         <thead>
           <tr>
             <th scope="col">Class</th>

@@ -79,3 +79,61 @@ def import_students_view(request):
     }
     
     return render(request, 'import_export/students.html', context)
+
+
+
+
+
+
+def export_student_data_to_excel_view(request):
+    import openpyxl
+    from main.models import Student  # Student Model from main app
+    from django.http import HttpResponse
+
+
+    # Create a new Excel workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = 'Students Data'
+    
+    # Add headers to the worksheet
+    headers = ['Class', 'Roll No', 'Full Name'] 
+    ws.append(headers)
+    
+    # Query the data from the database
+    student_data = Student.objects.all().values_list('grade__name', 'grade__section', 'roll_no', 'name')
+
+
+    #group students by class and section if possible
+    temp_dict = {}
+    for data in student_data:
+        if data[1] != '':
+            grade = f"{data[0]} - {data[1]}"
+        else:
+            grade = data[0]
+
+        if grade not in temp_dict:
+            temp_dict[grade] = [(data[2], data[3])]
+        else:
+            temp_dict[grade].append((data[2], data[3]))
+        
+    
+
+    # Write student_data to the worksheet
+    for key, values in temp_dict.items():
+        grade = key
+        for roll_no, name in values:
+            new_row = (grade, roll_no, name)
+            ws.append(new_row)
+            # print(new_row)
+    
+    # Prepare the response as a downloadable Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+    import datetime
+    response['Content-Disposition'] = f'attachment; filename=students_data-{datetime.datetime.now()}.xlsx'
+    
+    # Save the workbook to the response
+    wb.save(response)
+    
+    return response
