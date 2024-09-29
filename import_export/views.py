@@ -137,3 +137,130 @@ def export_student_data_to_excel_view(request):
     wb.save(response)
     
     return response
+
+
+
+def exports_exam_marks_view(request):
+    from main.models import Exam, MarksEntry, Grade
+
+    if request.method == 'POST':
+        grade_id = request.POST.get('grade_id')
+        exam_id = request.POST.get('exam_id')
+        # print(grade_id, exam_id)
+
+        try:
+            grade = Grade.objects.get(pk=grade_id)
+            exam = Exam.objects.get(pk=exam_id)
+        except (Grade.DoesNotExist, Exam.DoesNotExist):
+            messages.error(request, 'Invalid grade or exam')
+            return redirect('exports_exam_marks_view')
+
+        marks_entries = MarksEntry.objects.filter(exam_paper__exam=exam, student__grade=grade)
+        # print(marks_entries)
+        if marks_entries.exists():
+            temp_dict ={}
+            th_plus_pr_subjects = set()
+            for marks_entry in marks_entries:
+                student_roll_no = marks_entry.student.roll_no
+                subject = marks_entry.exam_paper.subject.name
+
+                if student_roll_no not in temp_dict:
+                    temp_dict[student_roll_no] = {}
+                
+                if subject not in temp_dict[student_roll_no]:
+                    temp_dict[student_roll_no][subject] = {}
+                    if marks_entry.exam_paper.practical_full_marks > 0:
+                        th_plus_pr_subjects.add(subject)
+                
+                temp_dict[student_roll_no][subject] = {
+                    'theory_marks': marks_entry.theory_marks,
+                    'practical_marks': marks_entry.practical_marks
+                }
+
+        temp_dict = dict(sorted(temp_dict.items(), key=lambda x: x[0]))
+        th_plus_pr_subjects = list(th_plus_pr_subjects)
+        # print(th_plus_pr_subjects)
+        import openpyxl
+        from main.models import Student  # Student Model from main app
+        from django.http import HttpResponse
+
+
+        # Create a new Excel workbook and worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = 'Marks Data'
+        
+
+        FIRST_HEADER_CELLS = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'L1', 'M1', 'N1', 'O1', 'P1', 'Q1', 'R1', 'S1', 'T1', 'U1', 'V1', 'W1', 'X1', 'Y1', 'Z1']
+        SECOND_HEADER_CELLS = ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2', 'I2', 'J2', 'K2', 'L2', 'M2', 'N2', 'O2', 'P2', 'Q2', 'R2', 'S2', 'T2', 'U2', 'V2', 'W2', 'X2', 'Y2', 'Z2']
+        #filling data into worksheet
+        DATA_CELLS_ALPHA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+        # Preparing Header for the worksheet
+        ws.merge_cells('A1:A2')
+        ws.merge_cells('B1:B2')
+        ws['A1'] = 'Roll No'
+        ws['B1'] = 'Student Name'
+        subject_current_cell_index = 2
+        for subject in tuple(temp_dict.items())[0][1].keys():
+            # print(subject, subject_current_cell_index)
+            if subject in th_plus_pr_subjects:
+                ws.merge_cells(f'{FIRST_HEADER_CELLS[subject_current_cell_index]}:{FIRST_HEADER_CELLS[subject_current_cell_index+1]}')
+                ws[f'{FIRST_HEADER_CELLS[subject_current_cell_index]}'] = subject
+                ws[f'{SECOND_HEADER_CELLS[subject_current_cell_index]}'] = 'PR'
+                ws[f'{SECOND_HEADER_CELLS[subject_current_cell_index+1]}'] = 'TH'
+                subject_current_cell_index += 2
+            else:
+                ws.merge_cells(f'{DATA_CELLS_ALPHA[subject_current_cell_index]}1:{DATA_CELLS_ALPHA[subject_current_cell_index]}2')
+                ws[f'{FIRST_HEADER_CELLS[subject_current_cell_index]}'] = subject
+                subject_current_cell_index += 1
+
+
+
+        
+
+        cell_index = 2
+        row_index = 3
+        for roll_no, data in temp_dict.items():
+            student = Student.objects.get(grade=grade, roll_no=roll_no)
+            ws[f'A{row_index}'] = roll_no
+            ws[f'B{row_index}'] = student.name
+            for subject, marks in data.items():
+                # print(subject, marks)
+
+                if subject in th_plus_pr_subjects:
+                    ws[f'{DATA_CELLS_ALPHA[cell_index]}{row_index}'] = marks['practical_marks']
+                    ws[f'{DATA_CELLS_ALPHA[cell_index+1]}{row_index}'] = marks['theory_marks']
+                    cell_index += 2
+                else:
+                    ws[f'{DATA_CELLS_ALPHA[cell_index]}{row_index}'] = marks['theory_marks']
+                    cell_index += 1
+
+            cell_index = 2
+            row_index += 1
+
+
+
+
+        from .helpers import auto_fit_column_width
+        auto_fit_column_width(ws)
+
+        
+        # Prepare the response as a downloadable Excel file
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+        import datetime
+        response['Content-Disposition'] = f'attachment; filename={exam}-students_marks_data-{datetime.datetime.now()}.xlsx'
+        
+        # Save the workbook to the response
+        wb.save(response)
+        
+        return response
+
+    else:
+        context = {
+            'exams': Exam.objects.all(),
+            'grades': Grade.objects.all(),
+        }
+
+        return render(request, 'import_export/exam_marks_export.html', context)

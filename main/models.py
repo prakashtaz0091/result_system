@@ -34,7 +34,7 @@ class Student(models.Model):
         unique_together = ('name', 'roll_no', 'grade')
 
     def __str__(self):
-        return self.grade.name + " - " + self.grade.section if self.grade.section != '-' else '' + " - " + self.name
+        return f"{self.grade.name}-{self.grade.section}-{self.name}" if self.grade.section != '' else f"{self.grade.name}-{self.name}"
     
 
 
@@ -114,7 +114,7 @@ class ExamPaper(models.Model):
         unique_together = ('exam', 'subject')
 
     def __str__(self):
-        return f"{self.subject.grade.name} - {self.subject.name} - {self.exam.name}"
+        return f"{self.subject.grade.name} - {self.subject.grade.section} - {self.subject.name} - {self.exam.name}" if self.subject.grade.section != '' else f"{self.subject.grade.name} - {self.subject.name} - {self.exam.name}"
     
 
     @property

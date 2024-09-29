@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+  Export Exam Marks
+{% endblock %}
+
+{% block extra_css %}
+  <style></style>
+{% endblock %}
+
+{% block main_content %}
+  <div class="container">
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form action="{% url 'exports_exam_marks_view' %}" method="post" class="mt-5 w-50 mx-auto border p-3 rounded shadow">
+      {% csrf_token %}
+      <h5>Export Exam Marks</h5>
+      <hr />
+      <label for="exam_id" class="form-label mt-3">Exam</label>
+      <select name="exam_id" id="exam_id" class="form-select" required>
+        <option value="">Select Exam</option>
+        {% for exam in exams %}
+          <option value="{{ exam.id }}">{{ exam.name }} - {{ exam.year }}</option>
+        {% endfor %}
+      </select>
+      <label for="grade_id" class="form-label mt-3">Grade</label>
+      <select name="grade_id" id="grade_id" class="form-select" required>
+        <option value="">Select Grade</option>
+        {% for grade in grades %}
+          <option value="{{ grade.id }}">{{ grade }}</option>
+        {% endfor %}
+      </select>
+
+      <button class="btn btn-success btn-sm mt-3" type="submit">Export Marks</button>
+    </form>
+  </div>
+{% endblock %}
