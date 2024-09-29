@@ -64,6 +64,12 @@ The **Result Publishing System** is a Django-based web application designed to m
 
 ---
 
+### v2 (Version 2) - Import And Export Excel file
+
+- **Import Student data from Excel File to Database and Perform Students Entry**
+- **Export Student data from Database to Excel File for keeping manual backup**
+- **Export Particular Exam's Grade's Obtained Marks Data from Database to Excel File for keeping manual backup**
+
 ## Installation
 
 1. **Clone the repository**:
