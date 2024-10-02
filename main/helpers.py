@@ -301,3 +301,17 @@ def get_reports(grade, exam):
     return temp_dict
     
 
+
+
+
+def get_nepali_date_today():
+        
+        from nepalicalendar import NepDate
+
+        today = str(NepDate.today())
+
+        year, month, day = today.split('(')[1].split(':')
+
+        return f'{year}/{month}/{day.split(')')[0]}'
+        
+        

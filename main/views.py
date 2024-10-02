@@ -9,7 +9,7 @@ from .import forms
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from .helpers import get_paper_student_marks,get_reports
+from .helpers import get_paper_student_marks,get_reports, get_nepali_date_today
 from django.views.decorators.http import require_http_methods, require_GET
 from django.db.models import Prefetch
 
@@ -580,10 +580,14 @@ def generate_report_cards_for_grade(request):
     # import pprint
     # for a,b in students_data.items():
     #     pprint.pprint(b)
+    today = get_nepali_date_today()
     context = {
         'students_data':students_data,
-        'exam': exam
+        'exam': exam,
+        'issued_date': today
     }
+
+
     
     return render(request, 'main/admin/report_cards.html', context)
 
