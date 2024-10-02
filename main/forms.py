@@ -139,8 +139,8 @@ class SubjectForm(forms.ModelForm):
 
 class ExamForm(forms.ModelForm):
     year = forms.ChoiceField(label="Year", widget=forms.Select(attrs={'class': 'form-control'}))
-    start_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)'}))
-    end_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)'}))
+    start_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)', 'class':'form-control'}))
+    end_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD (BS)', 'class':'form-control'}))
 
 
     class Meta:
