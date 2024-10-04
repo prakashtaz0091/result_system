@@ -312,6 +312,6 @@ def get_nepali_date_today():
 
         year, month, day = today.split('(')[1].split(':')
 
-        return f'{year}/{month}/{day.split(')')[0]}'
+        return f'{year}/{month}/{day.split(")")[0]}'
         
         
